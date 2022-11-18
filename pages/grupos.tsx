@@ -1,15 +1,14 @@
 import { LayoutApp } from '../components/layouts'
 
-
-
-
-export default function Home() {
+const Grupos = () => {
     return (
         <LayoutApp>
             <h2 className='text-2xl font-bold'>
-                INDEX
+                Share <a href="https://nextjs.org" className='text-sky-500'>Groups</a>
             </h2>
 
         </LayoutApp>
     )
 }
+
+export default Grupos
