@@ -1,14 +1,11 @@
-import { useRouter } from 'next/router';
-import { LayoutApp, LayoutCategory } from '../../components/layouts';
-import { NavBar } from '../../components/ui';
 import { useEffect, useState } from 'react';
-import { useData } from '../../hooks/useData';
+import { LayoutApp, LayoutCategory } from '../../components/layouts'
+import { NavBar } from '../../components/ui'
 import { ICategory } from '../../interfaces';
+import { useRouter } from 'next/router';
+import { useData } from '../../hooks/useData';
 
-
-
-
-const CategoryPage = () => {
+const Grupos = () => {
 
     const [category, setCategory] = useState<ICategory | null>(null)
 
@@ -32,23 +29,21 @@ const CategoryPage = () => {
     },[query, categories])
 
 
-    useEffect(()=>{
-        // TODO: Load pages
-    },[category])
-    
     return (
         <LayoutApp>
             {
                 !category
-                ? <div>cargando...</div>
-                : (
+                ? (
+                    <div>cargando...</div>
+                ):(
                     <LayoutCategory category={category}>
                         <p>content...</p>
                     </LayoutCategory>
                 )
             }
+
         </LayoutApp>
     )
 }
 
-export default CategoryPage
+export default Grupos

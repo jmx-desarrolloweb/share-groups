@@ -1,7 +1,6 @@
 import Head from "next/head"
 import { FC, ReactNode } from "react"
 import { SiderBar } from '../ui';
-import { NavBar } from '../ui/NavBar';
 
 
 interface Props {

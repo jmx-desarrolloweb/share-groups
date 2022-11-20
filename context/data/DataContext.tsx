@@ -4,6 +4,9 @@ import { ICategory } from "../../interfaces";
 
 interface ContextProps {
     categories: ICategory[]
+
+    // Methods
+    addNewCategory: (name: string) => Promise<{hasError:boolean; message: string }>
 }
 
 
