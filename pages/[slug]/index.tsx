@@ -1,8 +1,9 @@
-import { useRouter } from 'next/router';
-import { LayoutApp, LayoutCategory } from '../../components/layouts';
-import { NavBar } from '../../components/ui';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+import { LayoutApp, LayoutCategory } from '../../components/layouts';
 import { useData } from '../../hooks/useData';
+
 import { ICategory } from '../../interfaces';
 
 
@@ -15,13 +16,19 @@ const CategoryPage = () => {
     const router = useRouter()
     const { query } = router
     
-    const { categories } =  useData()
+    const { categories, updating } =  useData()
 
     useEffect(()=> {
 
         if(categories.length === 0 || !query.slug){ return }
-
         const categoryTemp = categories.find( cat => ( cat.slug === query.slug ) )
+
+        if(updating){
+            if(!categoryTemp){return}
+            setCategory(categoryTemp)
+            return
+        }
+
 
         if(!categoryTemp){
             router.replace('/')
@@ -34,7 +41,9 @@ const CategoryPage = () => {
 
     useEffect(()=>{
         // TODO: Load pages
-    },[category])
+        console.log('Cambio la categoría', category);
+        
+    },[category?._id])
     
     return (
         <LayoutApp>

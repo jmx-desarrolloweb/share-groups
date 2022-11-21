@@ -12,13 +12,19 @@ const Grupos = () => {
     const router = useRouter()
     const { query } = router
     
-    const { categories } =  useData()
+    const { categories, updating } =  useData()
 
     useEffect(()=> {
 
         if(categories.length === 0 || !query.slug){ return }
-
         const categoryTemp = categories.find( cat => ( cat.slug === query.slug ) )
+
+        if(updating){
+            if(!categoryTemp){return}
+            setCategory(categoryTemp)
+            return
+        }
+
 
         if(!categoryTemp){
             router.replace('/')
