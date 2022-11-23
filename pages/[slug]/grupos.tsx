@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+
+import { useData } from '../../hooks/useData'
 import { LayoutApp, LayoutCategory } from '../../components/layouts'
-import { NavBar } from '../../components/ui'
-import { ICategory } from '../../interfaces';
-import { useRouter } from 'next/router';
-import { useData } from '../../hooks/useData';
+
+import { ICategory } from '../../interfaces'
 
 const Grupos = () => {
 
@@ -33,6 +34,12 @@ const Grupos = () => {
         }
         
     },[query, categories])
+
+    useEffect(()=>{
+        // TODO: Load pages
+        console.log('Cambio la categoría - Grupos', category);
+        
+    },[category?._id])
 
 
     return (

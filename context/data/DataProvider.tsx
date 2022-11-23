@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { DataContext, dataReducer } from './';
 
-import { ICategory } from '../../interfaces';
+import { ICategory, IPage } from '../../interfaces';
 
 
 
@@ -14,11 +14,12 @@ interface Props {
 
 export interface DataState {
     categories: ICategory[];
-
+    pages: IPage[];
 }
 
 const DATA_INITIAL_STATE: DataState = {
     categories: [],
+    pages: [],
 }
 
 
@@ -37,7 +38,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
     const refreshCategories = async():Promise<{ hasError:boolean; message: string }> => {
 
         try {
-            const { data } = await axios.get('/api/admin/categories')
+            const { data } = await axios.get('/api/dashboard/categories')
             dispatch({ type: '[Data] - Load Categories', payload: data })
 
             return {
@@ -64,7 +65,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
     const addNewCategory = async( name: string ):Promise<{ hasError:boolean; message: string }>  => {
         try {
 
-            const { data } = await axios.post('/api/admin/categories', { name })
+            const { data } = await axios.post('/api/dashboard/categories', { name })
             dispatch({ type: '[Data] - Add New Category', payload: data })
 
             return {
@@ -93,7 +94,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
         setUpdating(true)
 
         try {
-            const { data } = await axios.put('/api/admin/categories', category)
+            const { data } = await axios.put('/api/dashboard/categories', category)
             dispatch({ type: '[Data] - Update Category', payload: data })
 
             return {
@@ -123,7 +124,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
     const deleteCategory = async( categoryId: string ): Promise<{ hasError: boolean; message: string;}> => {
 
         try {
-            const { data } = await axios.delete('/api/admin/categories', {
+            const { data } = await axios.delete('/api/dashboard/categories', {
                 data: {
                     _id: categoryId
                 }
@@ -154,16 +155,49 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    // ============ ============ Pages ============ ============
+    // TODO:
+    const addNewPage = async( page: IPage ): Promise<{ hasError: boolean, message: string }> => {
+        try {
+            const { data } = await axios.post('/api/dashboard/pages', { page })
+            dispatch({ type: '[Data] - Add New Page', payload: data })
+
+            return {
+                hasError: false,
+                message: ''
+            }
+
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+    }
+
 
     return (
         <DataContext.Provider value={{
             ...state,
             updating,
-            // ListGroups
+            // Categories
             addNewCategory,
             updateCategory,
             setUpdating,
             deleteCategory,
+
+            // Pages
+            addNewPage
       
         }}>
             {children}

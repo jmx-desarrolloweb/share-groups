@@ -62,7 +62,9 @@ const getCategories = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
         await db.connect()
         const categories = await Category.find().lean()
         await db.disconnect()
+        
         return res.status(200).json(categories)
+
     } catch (error) {
         await db.disconnect()
         console.log(error)

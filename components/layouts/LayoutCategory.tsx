@@ -88,8 +88,6 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
     
     }
 
-
-    // TODO:
     const onDelete = async( method: () => Promise<{ confirm: boolean }> ) => {
 
         const { confirm } = await method()
@@ -111,8 +109,8 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
             <ModalDelete
                 toShow={showDeleteModal} 
                 processing={loadingDelete}
-                title={'Eliminar esta categoría'} 
-                subtitle={`¿Desde eliminar la categoría ${ category.name }?`} 
+                title={'Eliminar categoría'} 
+                subtitle={`¿ Desde eliminar la categoría "${ category.name }" ?`} 
                 onResult={onDelete}
             />
             <NavBar />
@@ -173,9 +171,11 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                         </button>
                     </div>
                 </div>
-                {
-                    children
-                }
+                <div className='relative'>
+                    {
+                        children
+                    }
+                </div>
             </main>
             
         </>

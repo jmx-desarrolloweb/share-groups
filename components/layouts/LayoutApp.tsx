@@ -19,9 +19,9 @@ export const LayoutApp: FC<Props> = ({ children }) => {
                 <SiderBar />
                 <div className="px-5 pt-10 flex-1 flex flex-col">
                     {children}
-                    <footer>
+                    {/* <footer>
                         <p>Footer</p>
-                    </footer>
+                    </footer> */}
                 </div>
 
             </div>

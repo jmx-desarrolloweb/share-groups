@@ -1,7 +1,7 @@
 
 
-import { ICategory } from '../../interfaces';
 import { DataState } from './';
+import { ICategory, IPage } from '../../interfaces';
 
 
 type DataActionType =
@@ -9,6 +9,7 @@ type DataActionType =
     | { type: '[Data] - Add New Category', payload: ICategory }
     | { type: '[Data] - Update Category', payload: ICategory }
     | { type: '[Data] - Delete Category', payload: string }
+    | { type: '[Data] - Add New Page', payload: IPage }
 
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
 
@@ -36,6 +37,13 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 ...state,
                 categories: state.categories.filter( category =>  category._id !== action.payload )
             }
+
+        case '[Data] - Add New Page':
+            return {
+                ...state,
+                pages: [ ...state.pages, action.payload ]
+            }
+
         default:
             return state
     }

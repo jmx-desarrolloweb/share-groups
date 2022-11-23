@@ -1,10 +1,11 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
-import { ICategory } from "../../interfaces";
+import { ICategory, IPage } from "../../interfaces";
 
 
 interface ContextProps {
     categories: ICategory[]
-    updating: boolean
+    pages     : IPage[]
+    updating  : boolean
 
 
     // Methods
@@ -12,6 +13,8 @@ interface ContextProps {
     updateCategory: (category: ICategory) => Promise<{ hasError: boolean; message: string; }>
     setUpdating: Dispatch<SetStateAction<boolean>>
     deleteCategory: (categoryId: string) => Promise<{ hasError: boolean; message: string;}>
+
+    addNewPage: ( page: IPage ) => Promise<{ hasError: boolean, message: string }>
 }
 
 

@@ -39,9 +39,14 @@ const CategoryPage = () => {
     },[query, categories])
 
 
+    const loadPages = () => {
+        
+    }
+
+
     useEffect(()=>{
         // TODO: Load pages
-        console.log('Cambio la categoría', category);
+        console.log('Cambio la categoría - Index', category);
         
     },[category?._id])
     
@@ -53,6 +58,11 @@ const CategoryPage = () => {
                 : (
                     <LayoutCategory category={category}>
                         <p>content...</p>
+                        <button
+                            className='bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 flex items-center justify-center rounded-lg p-1 text-3xl active:scale-95 fixed bottom-12 right-12'
+                        >
+                            <i className='bx bx-plus'></i>
+                        </button>
                     </LayoutCategory>
                 )
             }
