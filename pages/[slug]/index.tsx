@@ -5,6 +5,7 @@ import { LayoutApp, LayoutCategory } from '../../components/layouts';
 import { useData } from '../../hooks/useData';
 
 import { ICategory } from '../../interfaces';
+import { ModalFormPage } from '../../components/pages';
 
 
 
@@ -12,6 +13,7 @@ import { ICategory } from '../../interfaces';
 const CategoryPage = () => {
 
     const [category, setCategory] = useState<ICategory | null>(null)
+    const [showForm, setShowForm] = useState(false)
 
     const router = useRouter()
     const { query } = router
@@ -59,10 +61,19 @@ const CategoryPage = () => {
                     <LayoutCategory category={category}>
                         <p>content...</p>
                         <button
+                        onClick={()=>setShowForm(true)}
                             className='bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 flex items-center justify-center rounded-lg p-1 text-3xl active:scale-95 fixed bottom-12 right-12'
                         >
                             <i className='bx bx-plus'></i>
                         </button>
+                        {
+                            showForm && (
+                                <ModalFormPage 
+                                    categoryId={category._id!}
+                                    setShowForm={setShowForm}
+                                />
+                            )
+                        }
                     </LayoutCategory>
                 )
             }

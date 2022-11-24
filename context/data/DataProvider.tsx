@@ -158,7 +158,9 @@ export const DataProvider: FC<Props> = ({ children }) => {
     // ============ ============ Pages ============ ============
     // TODO:
     const addNewPage = async( page: IPage ): Promise<{ hasError: boolean, message: string }> => {
+
         try {
+            
             const { data } = await axios.post('/api/dashboard/pages', { page })
             dispatch({ type: '[Data] - Add New Page', payload: data })
 
