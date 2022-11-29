@@ -13,24 +13,6 @@ type Data =
 
 
 
-const listGroups:ICategory[] = [
-    {
-        _id: '1231',
-        name: 'Fredy',
-        slug: 'fredy',
-    },
-    {
-        _id: '1232',
-        name: 'Tlapa Gro.',
-        slug: 'tlapa-gro',
-    },
-    {
-        _id: '1233',
-        name: 'Guerrero',
-        slug: 'guerrero',
-    },
-] 
-
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 

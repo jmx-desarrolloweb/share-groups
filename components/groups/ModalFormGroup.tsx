@@ -1,14 +1,11 @@
 import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import Image from "next/image";
 import { toast } from 'react-toastify'
-import { useForm } from "react-hook-form"
-import axios from "axios"
+import { useForm } from "react-hook-form";
 
-import { IPage } from '../../interfaces/IPage'
+import { IPage } from '../../interfaces/IPage';
 
 import profilePic from '../../public/img/facebook-page.jpg'
-import { useData } from "../../hooks/useData"
-
 
 
 const imageMimeType = /image\/(png|jpg|jpeg|gif|webp)/i;
@@ -22,13 +19,11 @@ interface Props {
     processing?: boolean
 }
 
-export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, processing = false }) => {
+export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, processing = false }) => {
 
     // file of images
     const [file, setFile] = useState(null)
     const [fileDataURL, setFileDataURL] = useState(null)
-
-    const { addNewPage } = useData()
 
     const fileInputRef = useRef<any>(null)
 
@@ -36,6 +31,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
         defaultValues: {
             name:'',
             url: '',
+            img: '',
         }
     })
 
@@ -101,37 +97,24 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
         setFileDataURL(null)
     }
 
-    const updateImage = async(): Promise<string | undefined> => {
-
-        if( !file ){ return }
-        
-        const formData = new FormData()
-        formData.append('file', file)
-
-        const { data } = await axios.post<{ message: string }>('/api/dashboard/images', formData)
-
-        return data.message
+    const updateImage = async() => {
+        // TODO: Subir imagen
     }
 
     const onPageSubmit = async({ name, url }:IPage) => {
         
-        const newPage:IPage = {
+        const newPage = {
             name,
             url,
-            category: categoryId
+            img: '',
+            categoryId
         }
-
-        if(file){
-            const imgUrl = await updateImage()
-            newPage.img = imgUrl
-        }
-
-
-        if (pageEdit) {
-
-        } else {
-            await addNewPage(newPage)
-        }
+        console.log({
+            file,
+            fileDataURL,
+            newPage
+        });
+        
     }
     
     const onCancel = async() => {
@@ -152,7 +135,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
                             <header className="flex justify-center py-3 border-b mb-8">
                                 <h2 className="flex items-center text-2xl font-bold gap-1">
                                     <i className='bx bxl-facebook-circle text-3xl'></i>
-                                    Nueva página
+                                    Nuevo grupo
                                 </h2>
                             </header>
                             {
@@ -187,7 +170,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
                                 <input
                                     type="text"
                                     id="name"
-                                    placeholder="Nombre de la página"
+                                    placeholder="Nombre del grupo"
                                     {...register('name', {
                                             required: 'El nombre es requerido',
                                     })}
@@ -203,10 +186,9 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
                                 <input
                                     type="text"
                                     id="url"
-                                    placeholder="https://www.facebook.com/ejemplo"
+                                    placeholder="Dirección url del grupo"
                                     {...register('url', {
                                         required: 'El url es requerido',
-                                        validate: ( value ) => !value.includes('https') ? 'La url no es válida' : undefined
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
                                 />
