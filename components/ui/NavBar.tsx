@@ -13,16 +13,16 @@ export const NavBar:FC = () => {
                 <ul className='ml-12 flex gap-16'>
                     <li>
                         <NextLink 
-                            href={`/${query.slug}`} 
-                            className={`font-semibold text-sky-800 px-2 pb-1 border-b-2 ${`/${query.slug}` === asPath ? 'border-sky-500' : 'border-transparent'}`}
+                            href={`/dashboard/${query.slug}`} 
+                            className={`font-semibold text-sky-800 px-2 pb-1 border-b-2 ${`/dashboard/${query.slug}` === asPath ? 'border-sky-500' : 'border-transparent'}`}
                         >
                             Páginas
                         </NextLink>
                     </li>
                     <li>
                         <NextLink 
-                            href={`/${query.slug}/grupos`} 
-                            className={`font-semibold text-sky-800 px-2 pb-1 border-b-2 ${`/${query.slug}/grupos` === asPath ? 'border-sky-500' : 'border-transparent'}`}
+                            href={`/dashboard/${query.slug}/grupos`} 
+                            className={`font-semibold text-sky-800 px-2 pb-1 border-b-2 ${`/dashboard/${query.slug}/grupos` === asPath ? 'border-sky-500' : 'border-transparent'}`}
                         >
                             Grupos
                         </NextLink>

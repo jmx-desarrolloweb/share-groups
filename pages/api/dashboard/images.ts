@@ -32,8 +32,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 
-
-
 const saveFile = async( file: formidable.File ):Promise<string> => {
 
     const { secure_url } = await cloudinary.uploader.upload( file.filepath, { folder: process.env.CLOUDINARY_FOLDER  } )

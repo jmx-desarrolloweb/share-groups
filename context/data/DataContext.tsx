@@ -14,6 +14,7 @@ interface ContextProps {
     setUpdating: Dispatch<SetStateAction<boolean>>
     deleteCategory: (categoryId: string) => Promise<{ hasError: boolean; message: string;}>
 
+    refreshPages: (category: string) => Promise<{ hasError: boolean; pagesResp: IPage[]; }>
     addNewPage: ( page: IPage ) => Promise<{ hasError: boolean, message: string }>
 }
 

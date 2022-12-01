@@ -18,21 +18,20 @@ interface Props {
     pageEdit?: IPage
     categoryId: string
     setShowForm: Dispatch<SetStateAction<boolean>>
-
-    processing?: boolean
 }
 
-export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, processing = false }) => {
+export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) => {
 
     // file of images
     const [file, setFile] = useState(null)
     const [fileDataURL, setFileDataURL] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const { addNewPage } = useData()
 
     const fileInputRef = useRef<any>(null)
 
-    const { register, handleSubmit, formState:{ errors }, reset, setValue, } = useForm<IPage>({
+    const { register, handleSubmit, formState:{ errors }, reset } = useForm<IPage>({
         defaultValues: {
             name:'',
             url: '',
@@ -108,13 +107,23 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
         const formData = new FormData()
         formData.append('file', file)
 
-        const { data } = await axios.post<{ message: string }>('/api/dashboard/images', formData)
+        try {
+            const { data } = await axios.post<{ message: string }>('/api/dashboard/images', formData)
+            return data.message
+       
+        } catch (error) {
+            setLoading(false)
+            console.log('Hubo un error', error);
+        }
 
-        return data.message
+    }
+
+    const onCancel = async() => {
+        setShowForm(false)
     }
 
     const onPageSubmit = async({ name, url }:IPage) => {
-        
+        setLoading(true)
         const newPage:IPage = {
             name,
             url,
@@ -126,17 +135,15 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
             newPage.img = imgUrl
         }
 
-
         if (pageEdit) {
 
         } else {
             await addNewPage(newPage)
+            onCancel()
         }
     }
     
-    const onCancel = async() => {
-        setShowForm(false)
-    }
+
 
     return (
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -226,10 +233,10 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
                         <div className="bg-gray-50 px-4 py-4 sm:flex sm:flex-row-reverse sm:px-6">
                             <button
                                 type="submit"
-                                disabled={processing}
+                                disabled={loading}
                                 className="flex w-full justify-center items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:bg-red-400 disabled:cursor-not-allowed">
                                 {
-                                    processing
+                                    loading
                                         ? (
                                             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle
@@ -252,7 +259,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm, pr
                             </button>
                             <button
                                 type="button"
-                                disabled={processing}
+                                disabled={loading}
                                 onClick={onCancel}
                                 className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-70 disabled:cursor-not-allowed">
                                 Cancelar

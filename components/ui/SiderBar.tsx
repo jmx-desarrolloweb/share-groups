@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 
 
 import { useData } from '../../hooks/useData'
+import { useAuth } from '../../hooks/useAuth';
 
 interface FormData {
     name: string
@@ -16,12 +17,14 @@ interface FormData {
 export const SiderBar = () => {
 
     const [showForm, setShowForm] = useState<boolean>(false)
+    const [showOptions, setShowOptions] = useState(false)
 
     const { register, handleSubmit, formState:{ errors }, setValue, setFocus,  } = useForm<FormData>()
 
     const router = useRouter()
     const { query } = router
     const { categories, addNewCategory } = useData()
+    const { logout } = useAuth()
 
 
     const onShowForm = () => {
@@ -44,18 +47,40 @@ export const SiderBar = () => {
         
         if( hasError ){ return }
 
-        router.push(`/${message}`)
+        router.push(`/dashboard/${message}`)
         
         cancelForm()
     }
 
     return (
         <div className="h-screen bg-white w-72 px-5 pt-5">
-            <NextLink 
-                href={'/'}
-                className="font-bold py-5 text-center text-sky-800 uppercase mb-5 flex justify-center items-center gap-1">
-                <i className='bx bxs-layer text-lg'></i> Share Groups
-            </NextLink>
+            <div className='flex justify-between items-center py-5 mb-5'>
+                <div></div>
+                <NextLink 
+                    href={'/'}
+                    className="font-bold text-center text-sky-800 uppercase flex justify-center items-center gap-1">
+                    <i className='bx bxs-layer text-lg'></i> Share Groups
+                </NextLink>
+                <div className='relative'>
+                    <button 
+                        onClick={() => setShowOptions(!showOptions)}
+                        className='hover:bg-slate-200 rounded active:scale-95 p-1'
+                    >
+                        <i className='bx bx-dots-vertical'></i>
+                    </button>
+                    {
+                        showOptions &&
+                        <div className="origin-top-right absolute right-2 mt-0 w-40 rounded-sm shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex justify-center hover:bg-gray-100" role="menu">
+                            <button
+                                onClick={ logout } 
+                                className="text-gray-700 flex items-center justify-center text-sm gap-1 px-2 py-2 hover:text-gray-900">
+                                <i className='bx bx-log-out' ></i>
+                                <span>Cerrar sesión</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
             {
                 !showForm
                     ?(
@@ -80,12 +105,12 @@ export const SiderBar = () => {
             }
 
             <ul className='mt-10'>
-                {
+                { categories.length > 0 &&
                     categories.map( category => (
                         <li key={category._id}>
                             <NextLink 
                                 className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-sky-100 hover:text-sky-800 mb-1 ${ query.slug === `${category.slug}` ? 'bg-sky-100 text-sky-800' : 'border-transparent'}`}
-                                href={`/${category.slug}`}>
+                                href={`/dashboard/${category.slug}`}>
                                 { category.name }
                             </NextLink>
                         </li>

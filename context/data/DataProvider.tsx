@@ -35,6 +35,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     },[])
 
+
     const refreshCategories = async():Promise<{ hasError:boolean; message: string }> => {
 
         try {
@@ -156,6 +157,36 @@ export const DataProvider: FC<Props> = ({ children }) => {
     }
 
     // ============ ============ Pages ============ ============
+    // TODO:
+    const refreshPages = async( category:string ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
+        
+        try {
+            const { data } = await axios.get<IPage[]>('/api/dashboard/pages', { params: { category } })
+            dispatch({ type: '[Data] - Load Pages', payload: data })
+
+            return {
+                hasError: false,
+                pagesResp: data,
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    pagesResp: []
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                pagesResp: [],
+            }
+        }
+    
+    }
     const addNewPage = async( page: IPage ): Promise<{ hasError: boolean, message: string }> => {
 
         try {
@@ -164,8 +195,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
             dispatch({ type: '[Data] - Add New Page', payload: data })
 
             console.log(data);
-            
-
+        
             return {
                 hasError: false,
                 message: ''
@@ -201,6 +231,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
             deleteCategory,
 
             // Pages
+            refreshPages,
             addNewPage
       
         }}>

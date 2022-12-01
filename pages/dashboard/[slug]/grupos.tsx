@@ -1,16 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { SetStateAction, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
-import { LayoutApp, LayoutCategory } from '../../components/layouts';
-import { useData } from '../../hooks/useData';
+import { useData } from '../../../hooks/useData'
+import { LayoutApp, LayoutCategory } from '../../../components/layouts'
 
-import { ICategory } from '../../interfaces';
-import { ModalFormPage } from '../../components/pages';
+import { ICategory } from '../../../interfaces'
+import { ModalFormGroup } from '../../../components/groups'
 
-
-
-
-const CategoryPage = () => {
+const GruposPage = () => {
 
     const [category, setCategory] = useState<ICategory | null>(null)
     const [showForm, setShowForm] = useState(false)
@@ -40,24 +37,20 @@ const CategoryPage = () => {
         
     },[query, categories])
 
-
-    const loadPages = () => {
-        
-    }
-
-
     useEffect(()=>{
         // TODO: Load pages
-        console.log('Cambio la categoría - Index', category);
+        console.log('Cambio la categoría - Grupos', category);
         
     },[category?._id])
-    
+
+
     return (
         <LayoutApp>
             {
                 !category
-                ? <div>cargando...</div>
-                : (
+                ? (
+                    <div>cargando...</div>
+                ):(
                     <LayoutCategory category={category}>
                         <p>content...</p>
                         <button
@@ -67,18 +60,19 @@ const CategoryPage = () => {
                             <i className='bx bx-plus'></i>
                         </button>
                         {
-                            showForm && (
-                                <ModalFormPage 
-                                    categoryId={category._id!}
-                                    setShowForm={setShowForm}
+                            showForm && (                                
+                                <ModalFormGroup
+                                    categoryId={ category._id! }
+                                    setShowForm={ setShowForm }
                                 />
                             )
                         }
                     </LayoutCategory>
                 )
             }
+
         </LayoutApp>
     )
 }
 
-export default CategoryPage
+export default GruposPage

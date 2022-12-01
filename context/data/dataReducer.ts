@@ -9,6 +9,7 @@ type DataActionType =
     | { type: '[Data] - Add New Category', payload: ICategory }
     | { type: '[Data] - Update Category', payload: ICategory }
     | { type: '[Data] - Delete Category', payload: string }
+    | { type: '[Data] - Load Pages', payload: IPage[] }
     | { type: '[Data] - Add New Page', payload: IPage }
 
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
@@ -36,6 +37,13 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 categories: state.categories.filter( category =>  category._id !== action.payload )
+            }
+            
+        // Pages
+        case '[Data] - Load Pages':
+            return {
+                ...state,
+                pages: [...action.payload ]
             }
 
         case '[Data] - Add New Page':
