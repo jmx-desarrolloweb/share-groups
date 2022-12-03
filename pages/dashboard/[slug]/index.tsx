@@ -58,7 +58,7 @@ const CategoryPage = () => {
     useEffect(()=>{
 
         const pageByCategory = pages.filter( page => page.category === category?._id )
-
+        
         if( pageByCategory.length === 0 ){            
             loadPages()
             return

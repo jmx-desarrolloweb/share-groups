@@ -8,8 +8,8 @@ export const NavBar:FC = () => {
     const { query, asPath } = router    
         
     return (
-        <div className='flex w-full justify-between mb-7'>
-            <nav>
+        <div className='flex items-end w-full mb-7'>
+            <nav className='flex-1 mr-5'>
                 <ul className='ml-12 flex gap-16'>
                     <li>
                         <NextLink 
@@ -29,7 +29,7 @@ export const NavBar:FC = () => {
                     </li>
                 </ul>
             </nav>
-            <button className='font-semibold text-sm rounded-md py-2 px-8 bg-sky-600 text-white hover:shadow-lg hover:bg-sky-700 transition-transform flex items-center justify-center gap-1'>
+            <button className='font-semibold text-sm rounded-md py-3 px-8 bg-gradient-to-r from-indigo-500 to-blue-500 over:from-indigo-600 hover:to-blue-600 text-white hover:shadow-lg hover:bg-sky-700 transition-transform flex items-center justify-center gap-1'>
             <i className='bx bx-refresh text-lg' ></i> Reasignar
             </button>
         </div>

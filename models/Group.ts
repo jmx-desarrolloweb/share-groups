@@ -7,6 +7,8 @@ const groupSchema = new Schema({
     url     : { type: String },
     slug    : { type: String },
     img     : { type: String },
+
+    category: { type: mongoose.Types.ObjectId,  ref: 'Category', },
 },{
     timestamps: true
 })

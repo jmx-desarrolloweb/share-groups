@@ -157,13 +157,19 @@ export const DataProvider: FC<Props> = ({ children }) => {
     }
 
     // ============ ============ Pages ============ ============
-    // TODO:
     const refreshPages = async( category:string ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
         
         try {
             const { data } = await axios.get<IPage[]>('/api/dashboard/pages', { params: { category } })
-            dispatch({ type: '[Data] - Load Pages', payload: data })
+            
+            if(data.length === 0){
+                return {
+                    hasError: false,
+                    pagesResp: [],
+                }
+            }
 
+            dispatch({ type: '[Data] - Load Pages', payload: data })
             return {
                 hasError: false,
                 pagesResp: data,

@@ -5,6 +5,12 @@ import { ICategory } from "../interfaces"
 const categorySchema = new Schema({
     name : { type: String },
     slug : { type: String },
+
+    user: { 
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 },{
     timestamps: true
 })

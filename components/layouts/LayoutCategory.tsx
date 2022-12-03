@@ -81,9 +81,9 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
         setLoadingUpdate(false)
 
         if(asPath.includes('grupos')) {
-            router.replace(`/${message}/grupos`)
+            router.replace(`/dashboard/${message}/grupos`)
         } else {
-            router.replace(`/${message}`)
+            router.replace(`/dashboard/${message}`)
         }
     
     }
@@ -94,13 +94,12 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
 
         if(!confirm){
             setShowDeleteModal(false)
-            console.log('Cancelado...');
             return
         }
         setLoadingDelete(true)
         const { hasError } = await deleteCategory(category._id!)
         if( hasError ){ return }
-        router.replace('/')
+        router.replace('/dashboard')
     }
 
 

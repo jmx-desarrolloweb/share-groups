@@ -43,7 +43,7 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
         case '[Data] - Load Pages':
             return {
                 ...state,
-                pages: [...action.payload ]
+                pages: [...state.pages, ...action.payload ]
             }
 
         case '[Data] - Add New Page':

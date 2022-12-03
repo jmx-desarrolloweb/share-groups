@@ -12,8 +12,7 @@ const pageSchema = new Schema({
         url : { type: String },
         img : { type: String },
     }],
-    category: { type: mongoose.Types.ObjectId,  ref: 'Category', }
-
+    category: { type: mongoose.Types.ObjectId,  ref: 'Category', },
 },{
     timestamps: true
 })

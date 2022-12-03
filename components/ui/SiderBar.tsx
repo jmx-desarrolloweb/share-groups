@@ -61,12 +61,15 @@ export const SiderBar = () => {
                     className="font-bold text-center text-sky-800 uppercase flex justify-center items-center gap-1">
                     <i className='bx bxs-layer text-lg'></i> Share Groups
                 </NextLink>
-                <div className='relative'>
+                <div 
+                    // onMouseOut={()=>setShowOptions(false)}
+                    className='relative'
+                >
                     <button 
                         onClick={() => setShowOptions(!showOptions)}
-                        className='hover:bg-slate-200 rounded active:scale-95 p-1'
+                        className='hover:bg-slate-100 rounded active:scale-95 p-1'
                     >
-                        <i className='bx bx-dots-vertical'></i>
+                        <i className='bx bx-dots-vertical text-sky-800'></i>
                     </button>
                     {
                         showOptions &&
@@ -86,7 +89,7 @@ export const SiderBar = () => {
                     ?(
                         <button
                             onClick={onShowForm} 
-                            className="w-full font-semibold text-sm rounded-md py-2 bg-indigo-600 text-white hover:shadow-lg hover:bg-indigo-700 transition-transform flex items-center justify-center gap-1">
+                            className="w-full font-semibold text-sm rounded-md py-3 bg-indigo-600 text-white hover:shadow-lg hover:bg-indigo-700 transition-transform flex items-center justify-center gap-1">
                             <i className='bx bx-plus text-lg'></i> Agregar categoria
                         </button>
                     ): (
