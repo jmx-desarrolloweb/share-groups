@@ -4,7 +4,8 @@ import axios from 'axios';
 
 import { DataContext, dataReducer } from './';
 
-import { ICategory, IPage } from '../../interfaces';
+import { ICategory, IGroup, IPage } from '../../interfaces';
+import { useAuth } from '../../hooks/useAuth';
 
 
 
@@ -15,25 +16,30 @@ interface Props {
 export interface DataState {
     categories: ICategory[];
     pages: IPage[];
+    groups: IGroup[];
 }
 
 const DATA_INITIAL_STATE: DataState = {
     categories: [],
     pages: [],
+    groups: [],
 }
 
 
 export const DataProvider: FC<Props> = ({ children }) => {
 
     const [updating, setUpdating] = useState(false)
+    const { isLoggedIn } = useAuth()
 
     const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE)
 
     useEffect(()=> {
+        if(!isLoggedIn){ return }
+
         if( state.categories.length === 0 ){
             refreshCategories()
         }
-    },[])
+    },[ isLoggedIn ])
 
 
     const refreshCategories = async():Promise<{ hasError:boolean; message: string }> => {
@@ -193,6 +199,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     
     }
+
     const addNewPage = async( page: IPage ): Promise<{ hasError: boolean, message: string }> => {
 
         try {
@@ -200,8 +207,6 @@ export const DataProvider: FC<Props> = ({ children }) => {
             const { data } = await axios.post('/api/dashboard/pages', page )
             dispatch({ type: '[Data] - Add New Page', payload: data })
 
-            console.log(data);
-        
             return {
                 hasError: false,
                 message: ''
@@ -226,6 +231,112 @@ export const DataProvider: FC<Props> = ({ children }) => {
     }
 
 
+    // ============ ============ Groups ============ ============
+
+    const refreshGroups = async( category:string ):Promise<{ hasError:boolean; groupsResp: IGroup[] }> => {
+        try {
+            const { data } = await axios.get<IPage[]>('/api/dashboard/groups', { params: { category } })
+            
+            if(data.length === 0){
+                return {
+                    hasError: false,
+                    groupsResp: [],
+                }
+            }
+
+            dispatch({ type: '[Data] - Load Groups', payload: data })
+            return {
+                hasError: false,
+                groupsResp: data,
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    groupsResp: []
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                groupsResp: [],
+            }
+        }
+    }
+
+    const addNewGroup = async( group: IGroup ): Promise<{ hasError: boolean, message: string }> => {
+
+        try {
+
+            const { data } = await axios.post('/api/dashboard/groups', group)
+            dispatch({ type:'[Data] - Add New Group', payload: data })
+
+            return {
+                hasError: false,
+                message: ''
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+
+    }
+
+    const deleteGroup = async( grupoId: string ): Promise<{ hasError: boolean; message: string;}> => {
+        try {
+
+            const { data } = await axios.delete('/api/dashboard/groups', {
+                data: {
+                    _id: grupoId
+                }
+            })
+
+            dispatch({ type: '[Data] - Delete Group', payload: data.message })
+
+
+            return {
+                hasError: false,
+                message: ''
+            }
+            
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+    }
+
+
+
     return (
         <DataContext.Provider value={{
             ...state,
@@ -238,7 +349,12 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
             // Pages
             refreshPages,
-            addNewPage
+            addNewPage,
+
+            // Groups
+            refreshGroups,
+            addNewGroup,
+            deleteGroup,
       
         }}>
             {children}

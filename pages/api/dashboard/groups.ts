@@ -25,7 +25,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return getGroups( req, res )  
 
         case 'POST':
-            return addNewGroup( req, res )     
+            return addNewGroup( req, res )
+        
+        case 'PUT':
+            return updateGroup( req, res )
+
+        case 'DELETE':
+            return deleteGroup( req, res )
 
         default:
             return res.status(400).json({ message: 'Bad request' })
@@ -130,6 +136,18 @@ const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 }
 
+const updateGroup = (req: NextApiRequest, res: NextApiResponse<Data>) => {
+    
+    return res.status(200).json({ message: 'Llamando al endpoint de ACTUALIZAR grupo....' })
+}
+
+
+const deleteGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+
+    return res.status(200).json({ message: 'Llamando al endpoint de ELIMINAR grupo....' })
+}
+
+
 
 const verifyUser = async( req: NextApiRequest, idCategory:string ):Promise<boolean> => {
 
@@ -143,3 +161,4 @@ const verifyUser = async( req: NextApiRequest, idCategory:string ):Promise<boole
 
     return false
 }
+

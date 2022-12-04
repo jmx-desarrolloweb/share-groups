@@ -6,3 +6,7 @@
 body, html {
     color: rgb(15, 23, 42);
 }
+
+body.fixed-body {
+    overflow:hidden
+}

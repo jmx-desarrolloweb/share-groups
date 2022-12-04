@@ -47,8 +47,6 @@ const CategoryPage = () => {
         // Cargardo... start
         const { hasError, pagesResp } = await refreshPages(category?._id)
         if(!hasError) {
-            console.log(pagesResp);
-            
             setPagesOfCategory(pagesResp)
         }
         // Cargardo... end
@@ -75,16 +73,18 @@ const CategoryPage = () => {
                 ? <div>cargando...</div>
                 : (
                     <LayoutCategory category={category}>
-                        <section>
+                        <section className='max-w-[600px] mx-auto'>
                             <ListPage pages={pagesOfCategory} />
+                            <button
+                                onClick={()=>setShowForm(true)}
+                                className="group border-dashed border-2 border-slate-400 py-4 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"
+                            >
+                                <div className='rounded-full h-12 w-12 flex justify-center items-center border border-slate-400 group-hover:border-slate-800'>
+                                    <i className='bx bx-plus text-slate-400 group-hover:text-slate-800 text-2xl'></i>
+                                </div>
+                                <p className='text-slate-400 group-hover:text-slate-800 font-semibold'>Agregar página</p>
+                            </button>
                         </section>
-                        
-                        <button
-                            onClick={()=>setShowForm(true)}
-                            className='bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 flex items-center justify-center rounded-lg p-1 text-3xl active:scale-95 fixed bottom-12 right-12'
-                        >
-                            <i className='bx bx-plus'></i>
-                        </button>
                         {
                             showForm && (
                                 <ModalFormPage 

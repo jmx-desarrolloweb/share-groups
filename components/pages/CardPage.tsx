@@ -14,7 +14,7 @@ export const CardPage: FC<Props> = ({ page }) => {
 
 
     return (
-        <div className="max-w-[600px] mx-auto mb-5">
+        <div className="mb-2">
             <header className="flex justify-between items-center border bg-white rounded py-2 px-5">
                 <div>
                     {page.img

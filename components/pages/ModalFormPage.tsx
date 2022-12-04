@@ -210,7 +210,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                 <input
                                     type="text"
                                     id="url"
-                                    placeholder="https://www.facebook.com/ejemplo"
+                                    placeholder="https://www.facebook.com/página"
                                     {...register('url', {
                                         required: 'El url es requerido',
                                         validate: ( value ) => !value.includes('https') ? 'La url no es válida' : undefined

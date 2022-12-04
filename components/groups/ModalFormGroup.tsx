@@ -6,28 +6,34 @@ import { useForm } from "react-hook-form";
 import { IPage } from '../../interfaces/IPage';
 
 import profilePic from '../../public/img/facebook-page.jpg'
+import axios from 'axios';
+import { IGroup } from "../../interfaces";
+import { useData } from "../../hooks/useData";
 
 
 const imageMimeType = /image\/(png|jpg|jpeg|gif|webp)/i;
 
 
 interface Props {
-    pageEdit?: IPage
+    groupEdit?: IGroup
     categoryId: string
     setShowForm: Dispatch<SetStateAction<boolean>>
 
     processing?: boolean
 }
 
-export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, processing = false }) => {
+export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }) => {
 
     // file of images
     const [file, setFile] = useState(null)
     const [fileDataURL, setFileDataURL] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const { addNewGroup } = useData()
 
     const fileInputRef = useRef<any>(null)
 
-    const { register, handleSubmit, formState:{ errors }, reset, setValue, } = useForm<IPage>({
+    const { register, handleSubmit, formState:{ errors }, reset, setValue, } = useForm<IGroup>({
         defaultValues: {
             name:'',
             url: '',
@@ -36,14 +42,14 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
     })
 
     useEffect(()=>{
-        if(pageEdit){
+        if(groupEdit){
             reset({
-                name: pageEdit.name,
-                url: pageEdit.url,
-                img: pageEdit.img,
+                name: groupEdit.name,
+                url: groupEdit.url,
+                img: groupEdit.img,
             })
         }
-    },[pageEdit])
+    },[groupEdit])
     
     
 
@@ -97,29 +103,50 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
         setFileDataURL(null)
     }
 
-    const updateImage = async() => {
-        // TODO: Subir imagen
+    const updateImage = async(): Promise<string | undefined> => {
+        if( !file ){ return }
+        
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const { data } = await axios.post<{ message: string }>('/api/dashboard/images', formData)
+            return data.message
+       
+        } catch (error) {
+            setLoading(false)
+            console.log('Hubo un error', error);
+        }
     }
 
-    const onPageSubmit = async({ name, url }:IPage) => {
-        
-        const newPage = {
-            name,
-            url,
-            img: '',
-            categoryId
-        }
-        console.log({
-            file,
-            fileDataURL,
-            newPage
-        });
-        
-    }
-    
     const onCancel = async() => {
         setShowForm(false)
     }
+
+    const onPageSubmit = async({ name, url }:IPage) => {
+        setLoading(true)
+        
+        const newGroup:IGroup = {
+            name,
+            url,
+            category: categoryId
+        }
+
+        if(file){
+            const imgUrl = await updateImage()
+            newGroup.img = imgUrl
+        }
+
+        if (groupEdit){
+
+        } else {
+            await addNewGroup(newGroup)
+            onCancel()
+        }
+                
+    }
+    
+
 
     return (
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -139,14 +166,14 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
                                 </h2>
                             </header>
                             {
-                                fileDataURL || pageEdit?.img
+                                fileDataURL || groupEdit?.img
                                     ? (
                                         <div className="relative group mb-5 flex justify-center">
                                             <Image
                                                 priority
                                                 width={500}
                                                 height={10}
-                                                src={ fileDataURL || pageEdit?.img || profilePic}
+                                                src={ fileDataURL || groupEdit?.img || profilePic}
                                                 alt={'Nombre de pagina'}
                                                 className='rounded' 
                                             />
@@ -186,9 +213,11 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
                                 <input
                                     type="text"
                                     id="url"
-                                    placeholder="Dirección url del grupo"
+                                    placeholder="https://www.facebook.com/grupo"
                                     {...register('url', {
                                         required: 'El url es requerido',
+                                        validate: ( value ) => !value.includes('https') ? 'La url no es válida' : undefined
+
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
                                 />
@@ -208,10 +237,10 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
                         <div className="bg-gray-50 px-4 py-4 sm:flex sm:flex-row-reverse sm:px-6">
                             <button
                                 type="submit"
-                                disabled={processing}
+                                disabled={loading}
                                 className="flex w-full justify-center items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:bg-red-400 disabled:cursor-not-allowed">
                                 {
-                                    processing
+                                    loading
                                         ? (
                                             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle
@@ -234,7 +263,7 @@ export const ModalFormGroup: FC<Props> = ({ pageEdit, categoryId, setShowForm, p
                             </button>
                             <button
                                 type="button"
-                                disabled={processing}
+                                disabled={loading}
                                 onClick={onCancel}
                                 className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-70 disabled:cursor-not-allowed">
                                 Cancelar

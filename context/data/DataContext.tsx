@@ -1,10 +1,11 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
-import { ICategory, IPage } from "../../interfaces";
+import { ICategory, IGroup, IPage } from "../../interfaces";
 
 
 interface ContextProps {
     categories: ICategory[]
     pages     : IPage[]
+    groups    : IGroup[]
     updating  : boolean
 
 
@@ -16,6 +17,10 @@ interface ContextProps {
 
     refreshPages: (category: string) => Promise<{ hasError: boolean; pagesResp: IPage[]; }>
     addNewPage: ( page: IPage ) => Promise<{ hasError: boolean, message: string }>
+    
+    refreshGroups: (category: string) => Promise<{ hasError: boolean; groupsResp: IGroup[]; }>
+    addNewGroup: (group: IGroup) => Promise<{ hasError: boolean; message: string; }>
+    deleteGroup: (grupoId: string) => Promise<{ hasError: boolean; message: string; }>
 }
 
 

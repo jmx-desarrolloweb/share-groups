@@ -59,8 +59,6 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
     }
 
 
-
-
     const onEdith = async({ name }:FormData) => {
 
         setLoadingUpdate(true)
