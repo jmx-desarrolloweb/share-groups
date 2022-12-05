@@ -91,7 +91,7 @@ const addNewCategory = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
 
 const updateCategory = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
-    const { name='', _id } = req.body
+    const { name='', _id='' } = req.body
 
     if( name === '' ){
         return res.status(400).json({ message: 'La propiedad nombre es necesaria' })

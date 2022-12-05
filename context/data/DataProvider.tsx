@@ -299,6 +299,40 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     }
 
+    const updateGroup = async ( group: IGroup ): Promise<{ hasError: boolean; message: string;}> => {
+        
+        try {
+            
+            const { data } = await axios.put('/api/dashboard/groups', group)
+
+            dispatch({ type: '[Data] - Update Group', payload: data })
+            console.log(data);
+            
+        return {
+                hasError: false,
+                message: ''
+        }
+
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+
+    }
+
+
     const deleteGroup = async( grupoId: string ): Promise<{ hasError: boolean; message: string;}> => {
         try {
 
@@ -354,6 +388,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
             // Groups
             refreshGroups,
             addNewGroup,
+            updateGroup,
             deleteGroup,
       
         }}>

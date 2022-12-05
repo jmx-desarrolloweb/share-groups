@@ -7,6 +7,9 @@ import { Category, Group } from '../../../models'
 import { db } from '../../../database'
 import { IGroup } from '../../../interfaces'
 
+import { v2 as cloudinary } from 'cloudinary'
+cloudinary.config( process.env.CLOUDINARY_URL || '' )
+
 
 
 
@@ -136,15 +139,112 @@ const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 }
 
-const updateGroup = (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const updateGroup = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+
+    const { _id='', img='', name='', url='' } = req.body
+
+    if(!isValidObjectId(_id)){
+        return res.status(400).json({ message: 'El ID del grupo NO es valido' })
+    }
+
+    try {
+
+        await db.connect()
+
+        const groupUpdate = await Group.findById(_id)
+        if( !groupUpdate ){
+            await db.disconnect()
+            return res.status(400).json({ message: 'Grupo no encontrado' }) 
+        }
+
+        const actualCategory = await Category.findById( groupUpdate.category )
+        if(!actualCategory){
+            await db.disconnect()
+            return res.status(400).json({ message: ' Categoría del grupo no encontrada' })
+        }
+
+        const isUserValid = await verifyUser(req, actualCategory.user)
+
+        if(!isUserValid){
+            await db.disconnect()
+            return res.status(401).json({ message: 'Not authorized' }) 
+        }
+
+        // TODO: Verificar imagen
+        if( groupUpdate.img && groupUpdate.img !== img  ){
+            const [ fileId, extencion ] = (groupUpdate.img).substring( (groupUpdate.img).lastIndexOf('/') + 1 ).split('.')
+            await cloudinary.uploader.destroy( `${process.env.CLOUDINARY_FOLDER}/${fileId}` )
+        }
+
+        const slug = slugify(name, { replacement: '-', lower: true })
+
+        groupUpdate.name = name
+        groupUpdate.slug = slug
+        groupUpdate.url = url
+        groupUpdate.img = img
+
+        await groupUpdate.save()
+        await db.disconnect()
+        
+        return res.status(200).json(groupUpdate)
+        
+    } catch (error) {
+        await db.disconnect()
+        console.log(error)
+        return res.status(500).json({ message: 'Algo salio mal, revisar la consola del servidor' })
+    }
     
-    return res.status(200).json({ message: 'Llamando al endpoint de ACTUALIZAR grupo....' })
 }
 
 
 const deleteGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    return res.status(200).json({ message: 'Llamando al endpoint de ELIMINAR grupo....' })
+    const { _id } = req.body
+
+    if(!isValidObjectId(_id)){
+        return res.status(400).json({ message: 'El ID del grupo NO es valido' })
+    }
+
+    try {
+        
+        await db.connect()
+
+        const group = await Group.findById(_id)
+        if( !group ){
+            await db.disconnect()
+            return res.status(400).json({ message: 'Grupo no encontrado' }) 
+        }
+
+        const actualCategory = await Category.findById( group.category )
+        if(!actualCategory){
+            await db.disconnect()
+            return res.status(400).json({ message: ' Categoría del grupo no encontrada' })
+        }
+
+        // Verificar usuario
+        const isUserValid = await verifyUser(req, actualCategory.user)
+
+        if(!isUserValid){
+            await db.disconnect()
+            return res.status(401).json({ message: 'Not authorized' }) 
+        }
+
+        if( group.img ){
+            const [ fileId, extencion ] = (group.img).substring( (group.img).lastIndexOf('/') + 1 ).split('.')
+            await cloudinary.uploader.destroy( `${process.env.CLOUDINARY_FOLDER}/${fileId}` )
+        }
+
+        await group.deleteOne()
+        await db.disconnect()
+
+        return res.status(200).json({ message: _id })
+
+    } catch (error) {
+        await db.disconnect()
+        console.log(error)
+        return res.status(500).json({ message: 'Algo salio mal, revisar la consola del servidor' })
+    }
+
 }
 
 

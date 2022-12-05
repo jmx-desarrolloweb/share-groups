@@ -1,20 +1,24 @@
-import { FC, useState } from "react"
+import { FC, SetStateAction, useState } from "react"
 
 import NextImage from 'next/image'
 
 import { IGroup } from "../../interfaces"
 import { ModalDelete } from "../ui"
 import { useData } from '../../hooks/useData';
+import { ModalFormGroup } from './ModalFormGroup';
 
 
 interface Props {
     group: IGroup
+    categoryId: string
 }
 
-export const CardGroup:FC<Props> = ({ group }) => {
+export const CardGroup:FC<Props> = ({ group, categoryId }) => {
 
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showFormEdit, setShowFormEdit] = useState(false)
+
     const [loadingDelete, setLoadingDelete] = useState(false)
 
     const { deleteGroup } = useData()
@@ -83,14 +87,15 @@ export const CardGroup:FC<Props> = ({ group }) => {
                 </div>
                 <div className='flex gap-2'>
                     <button
+                        onClick={()=>setShowFormEdit(true)}
                         className="items-center text-sky-600 hover:text-white bg-sky-100 hover:bg-sky-500 font-bold text-sm py-2 px-3 rounded-md"
                     >
                         <i className='bx bx-edit-alt' ></i>
                     </button>
                     <button
                         onClick={handleShowModalDelete}
-                        className="items-center text-red-600 hover:text-white bg-red-100 hover:bg-red-500 font-bold text-sm py-2 px-3 rounded-md">
-
+                        className="items-center text-red-600 hover:text-white bg-red-100 hover:bg-red-500 font-bold text-sm py-2 px-3 rounded-md"
+                    >
                         <i className='bx bx-trash'></i>
                     </button>
                 </div>
@@ -102,6 +107,15 @@ export const CardGroup:FC<Props> = ({ group }) => {
                 subtitle={`¿ Desde eliminar el grupo "${ group.name }" ?`} 
                 onResult={onDelete}
             />
+            {
+                showFormEdit && (
+                    <ModalFormGroup
+                        groupEdit={ group } 
+                        categoryId={ categoryId } 
+                        setShowForm={ setShowFormEdit }
+                    />
+                )
+            }
         </>
     )
 }

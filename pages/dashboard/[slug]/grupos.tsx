@@ -75,7 +75,10 @@ const GruposPage = () => {
                 ):(
                     <LayoutCategory category={category}>
                         <section className='max-w-[600px] mx-auto'>
-                            <ListGroup groups={groupsOfCategory} />
+                            <ListGroup 
+                                groups={groupsOfCategory} 
+                                categoryId={ category._id! } 
+                            />
                             <button
                                 onClick={()=>setShowForm(true)}
                                 className="group border-dashed border-2 border-slate-400 py-2 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"

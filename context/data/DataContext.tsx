@@ -20,6 +20,7 @@ interface ContextProps {
     
     refreshGroups: (category: string) => Promise<{ hasError: boolean; groupsResp: IGroup[]; }>
     addNewGroup: (group: IGroup) => Promise<{ hasError: boolean; message: string; }>
+    updateGroup: (group: IGroup) => Promise<{ hasError: boolean; message: string; }>
     deleteGroup: (grupoId: string) => Promise<{ hasError: boolean; message: string; }>
 }
 

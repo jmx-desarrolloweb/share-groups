@@ -15,6 +15,7 @@ type DataActionType =
     
     | { type: '[Data] - Load Groups', payload: IGroup[] }
     | { type: '[Data] - Add New Group', payload: IGroup }
+    | { type: '[Data] - Update Group', payload: IGroup }
     | { type: '[Data] - Delete Group', payload: string }
 
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
@@ -69,6 +70,12 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 ...state,
                 groups: [ ...state.groups, action.payload ]
             }
+        case '[Data] - Update Group':
+            return {
+                ...state,
+                groups: state.groups.map( group => group._id === action.payload._id ? action.payload : group )
+            }
+
         case '[Data] - Delete Group':
             return {
                 ...state,

@@ -27,17 +27,18 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
     // file of images
     const [file, setFile] = useState(null)
     const [fileDataURL, setFileDataURL] = useState(null)
+    const [imageEdit, setImageEdit] = useState<string>()
+
     const [loading, setLoading] = useState(false)
 
-    const { addNewGroup } = useData()
+    const { addNewGroup, updateGroup } = useData()
 
     const fileInputRef = useRef<any>(null)
 
-    const { register, handleSubmit, formState:{ errors }, reset, setValue, } = useForm<IGroup>({
+    const { register, handleSubmit, formState:{ errors }, reset, } = useForm<IGroup>({
         defaultValues: {
             name:'',
             url: '',
-            img: '',
         }
     })
 
@@ -46,8 +47,8 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             reset({
                 name: groupEdit.name,
                 url: groupEdit.url,
-                img: groupEdit.img,
             })
+            setImageEdit(groupEdit.img)
         }
     },[groupEdit])
     
@@ -101,6 +102,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
     const deleteImage = async() => {
         setFile(null)
         setFileDataURL(null)
+        setImageEdit(undefined)
     }
 
     const updateImage = async(): Promise<string | undefined> => {
@@ -136,12 +138,18 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             const imgUrl = await updateImage()
             newGroup.img = imgUrl
         }
-
+        
         if (groupEdit){
+            
+            newGroup._id = groupEdit._id
+            await updateGroup(newGroup)
+            onCancel()
 
         } else {
+
             await addNewGroup(newGroup)
             onCancel()
+
         }
                 
     }
@@ -166,14 +174,14 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                 </h2>
                             </header>
                             {
-                                fileDataURL || groupEdit?.img
+                                fileDataURL || imageEdit
                                     ? (
                                         <div className="relative group mb-5 flex justify-center">
                                             <Image
                                                 priority
                                                 width={500}
                                                 height={10}
-                                                src={ fileDataURL || groupEdit?.img || profilePic}
+                                                src={ fileDataURL || imageEdit || profilePic}
                                                 alt={'Nombre de pagina'}
                                                 className='rounded' 
                                             />
