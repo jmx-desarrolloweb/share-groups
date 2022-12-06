@@ -13,8 +13,6 @@ interface Props {
 
 export const CardPage: FC<Props> = ({ page, categoryId }) => {
 
-
-    const [showOptions, setShowOptions] = useState(false)
     const [showFormEdit, setShowFormEdit] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -80,19 +78,15 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                     }
                 </div>
                 <h3 className="text-slate-800 text-xl font-bold">{ page.name }</h3>
-                <div
-                    // onMouseOut={()=>setShowOptions(false)}
-                    className='relative'
-                >
-                    <button
-                        onClick={() => setShowOptions(!showOptions)}
-                        className='hover:bg-slate-100 rounded active:scale-95 p-1'
-                    >
+                <div className='group relative' >
+                    <button className='hover:bg-slate-100 rounded active:scale-95 p-1'>
                         <i className='bx bx-dots-vertical text-slate-800'></i>
                     </button>
-                    {
-                        showOptions &&
-                        <div className="origin-top-right absolute right-0 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+
+                    <div 
+                        className="origin-top-right absolute right-0 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 hidden group-hover:block"
+                        role="menu"
+                    >
                         <div className="py-2" role="none">
                             <button
                                 onClick={ () => setShowFormEdit(true) } 
@@ -108,7 +102,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             </button>
                         </div>
                     </div>
-                    }
+    
                 </div>
             </header>
             <div>

@@ -18,11 +18,14 @@ export const SiderBar = () => {
 
     const [showForm, setShowForm] = useState<boolean>(false)
     const [showOptions, setShowOptions] = useState(false)
+    const [loading, setLoading] = useState(false)
+
 
     const { register, handleSubmit, formState:{ errors }, setValue, setFocus,  } = useForm<FormData>()
 
     const router = useRouter()
     const { query } = router
+
     const { categories, addNewCategory } = useData()
     const { logout } = useAuth()
 
@@ -42,7 +45,9 @@ export const SiderBar = () => {
 
 
     const onSubmitForm = async({ name }:FormData) => {
-      
+        
+        setLoading(true)
+
         const { hasError, message }  = await addNewCategory(name)
         
         if( hasError ){ return }
@@ -50,10 +55,11 @@ export const SiderBar = () => {
         router.push(`/dashboard/${message}`)
         
         cancelForm()
+        setLoading(false)
     }
 
     return (
-        <div className="h-screen bg-white w-72 px-5 pt-5">
+        <div className="h-screen sticky top-0 bg-white w-72 px-5 pt-5">
             <div className='flex justify-between items-center py-5 mb-5'>
                 <div></div>
                 <NextLink 
@@ -62,7 +68,6 @@ export const SiderBar = () => {
                     <i className='bx bxs-layer text-lg'></i> Share Groups
                 </NextLink>
                 <div 
-                    // onMouseOut={()=>setShowOptions(false)}
                     className='relative'
                 >
                     <button 
@@ -96,6 +101,7 @@ export const SiderBar = () => {
                         <form onSubmit={ handleSubmit( onSubmitForm ) }>
                             <input
                                 type="text"
+                                disabled={loading}
                                 placeholder='Nombre de la categoría'
                                 onKeyUp={({ code })=> code === 'Escape' ? cancelForm() : undefined}
                                 className={`w-full border-b border-b-slate-300 px-2 py-1 outline-none ${ !!errors.name ? 'hover:border-b-red-600 focus:border-b-red-600' : 'hover:border-b-sky-800 focus:border-b-sky-800 ' } transition-all`}

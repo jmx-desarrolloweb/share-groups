@@ -131,7 +131,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
 
         const newPage:IPage = {
             name,
-            url,
+            url: url.trim(),
             category: categoryId
         }
 
@@ -168,24 +168,26 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                             <header className="flex justify-center py-3 border-b mb-8">
                                 <h2 className="flex items-center text-2xl font-bold gap-1">
                                     <i className='bx bxl-facebook-circle text-3xl'></i>
-                                    Nueva página
+                                    {pageEdit ? 'Editar página' : 'Nueva página'}
                                 </h2>
                             </header>
                             {
                                 fileDataURL || imageEdit
                                     ? (
-                                        <div className="relative group mb-5 flex justify-center">
+                                        <div className="relative group mb-5 flex justify-center w-48 shadow p-3 mx-auto">
                                             <Image
                                                 priority
                                                 width={500}
                                                 height={10}
                                                 src={ fileDataURL || imageEdit || profilePic}
                                                 alt={'Nombre de pagina'}
-                                                className='rounded' 
+                                                className='rounded-full shadow' 
                                             />
                                             <button
-                                                onClick={deleteImage} 
-                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full text-lg w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
+                                                type="button"
+                                                onClick={deleteImage}
+                                                disabled={loading}  
+                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
                                                 <i className='bx bx-trash'></i>
                                             </button>
                                         </div>
@@ -208,6 +210,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                             required: 'El nombre es requerido',
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
+                                    disabled={loading} 
                                 />
                                 {
                                     !!errors.name &&
@@ -222,9 +225,10 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                     placeholder="https://www.facebook.com/página"
                                     {...register('url', {
                                         required: 'El url es requerido',
-                                        validate: ( value ) => !value.includes('https') ? 'La url no es válida' : undefined
+                                        validate: ( value ) => !value.includes('https://') || value.trim().includes(' ') ? 'La url no es válida' : undefined
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
+                                    disabled={loading} 
                                 />
                                 {
                                     !!errors.url &&

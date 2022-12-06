@@ -22,7 +22,7 @@ export const NavBar:FC = () => {
     }
         
     return (
-        <div className='flex items-end w-full mb-7'>
+        <div className='sticky top-0 flex items-center w-full bg-indigo-50 z-[1] py-3 px-5 shadow'>
             <nav className='flex-1 mr-5'>
                 <ul className='ml-12 flex gap-16'>
                     <li>

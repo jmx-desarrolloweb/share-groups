@@ -131,7 +131,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
         
         const newGroup:IGroup = {
             name,
-            url,
+            url: url.trim(),
             category: categoryId
         }
 
@@ -170,25 +170,27 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                         <div className="bg-white px-4 pt-5 pb-4 sm:px-6 sm:pt-2 sm:pb-4">
                             <header className="flex justify-center py-3 border-b mb-8">
                                 <h2 className="flex items-center text-2xl font-bold gap-1">
-                                    <i className='bx bxl-facebook-circle text-3xl'></i>
-                                    Nuevo grupo
+                                    <i className='bx bxs-user-circle text-3xl' ></i>
+                                    { groupEdit ? 'Editar grupo' : 'Nuevo grupo'}
                                 </h2>
                             </header>
                             {
                                 fileDataURL || imageEdit
                                     ? (
-                                        <div className="relative group mb-5 flex justify-center">
+                                        <div className="relative group mb-5 flex justify-center w-48 shadow p-3 mx-auto">
                                             <Image
                                                 priority
                                                 width={500}
                                                 height={10}
                                                 src={ fileDataURL || imageEdit || profilePic}
                                                 alt={'Nombre de pagina'}
-                                                className='rounded' 
+                                                className='rounded-full shadow' 
                                             />
                                             <button
-                                                onClick={deleteImage} 
-                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full text-lg w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
+                                                onClick={deleteImage}
+                                                type="button"
+                                                disabled={loading} 
+                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
                                                 <i className='bx bx-trash'></i>
                                             </button>
                                         </div>
@@ -211,6 +213,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                             required: 'El nombre es requerido',
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
+                                    disabled={loading}
                                 />
                                 {
                                     !!errors.name &&
@@ -222,13 +225,13 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                 <input
                                     type="text"
                                     id="url"
-                                    placeholder="https://www.facebook.com/grupo"
+                                    placeholder="https://www.facebook.com/groups/grupo"
                                     {...register('url', {
                                         required: 'El url es requerido',
-                                        validate: ( value ) => !value.includes('https') ? 'La url no es válida' : undefined
-
+                                        validate: ( value ) => !value.includes('https://') || value.trim().includes(' ') ? 'La url no es válida' : undefined,
                                     })}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
+                                    disabled={loading}
                                 />
                                 {
                                     !!errors.url &&

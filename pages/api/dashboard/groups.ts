@@ -139,7 +139,7 @@ const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 const updateGroup = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    const { _id='', img='', name='', url='' } = req.body
+    const { _id='', img=null, name='', url='' } = req.body
 
     if(!isValidObjectId(_id)){
         return res.status(400).json({ message: 'El ID del grupo NO es valido' })

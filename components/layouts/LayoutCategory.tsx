@@ -95,9 +95,8 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
             return
         }
         setLoadingDelete(true)
-        const { hasError } = await deleteCategory(category._id!)
-        if( hasError ){ return }
-        router.replace('/dashboard')
+        await deleteCategory(category._id!)
+
     }
 
 
@@ -111,7 +110,7 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                 onResult={onDelete}
             />
             <NavBar />
-            <main>
+            <main className='px-5 py-5'>
                 <div className='flex items-center gap-4 group mb-5'>
                     {
                         !showForm 
@@ -162,7 +161,7 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                                 <i className='bx bx-trash'></i>
                         </button>
                         <button
-                            onClick={ onShowForm}
+                            onClick={ onShowForm }
                             className="items-center text-sky-600 hover:text-white bg-sky-100 hover:bg-sky-500 font-bold text-sm py-2 px-2 rounded-md hidden group-hover:flex">
                                <i className='bx bx-edit-alt' ></i>
                         </button>

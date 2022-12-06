@@ -48,11 +48,8 @@ export const LayoutApp: FC<Props> = ({ children }) => {
             <div className="flex">
                 
                 <SiderBar />
-                <div className="px-5 pt-10 flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col">
                     {children}
-                    {/* <footer>
-                        <p>Footer</p>
-                    </footer> */}
                 </div>
 
             </div>

@@ -140,7 +140,7 @@ const addNewPage = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 const updatePage = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
-    const { _id='', img='', name='', url='', groups=[] } = req.body
+    const { _id='', img=null, name='', url='', groups=[] } = req.body
 
     if( !isValidObjectId( _id ) ){
         return res.status(400).json({ message: 'El ID de la página NO es valido' })

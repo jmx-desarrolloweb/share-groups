@@ -7,6 +7,7 @@ import { DataContext, dataReducer } from './';
 
 import { ICategory, IGroup, IPage } from '../../interfaces';
 import { useAuth } from '../../hooks/useAuth';
+import { useRouter } from 'next/router';
 
 
 
@@ -31,6 +32,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     const [updating, setUpdating] = useState(false)
     const { isLoggedIn } = useAuth()
+
+    const router = useRouter()
 
     const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE)
 
@@ -159,8 +162,10 @@ export const DataProvider: FC<Props> = ({ children }) => {
                 }
             })
 
-            notifySuccess('Categoría eliminada')
+            await router.replace('/dashboard')
+
             dispatch({ type: '[Data] - Delete Category', payload: data.message })
+            notifySuccess('Categoría eliminada')
 
             return {
                 hasError: false,

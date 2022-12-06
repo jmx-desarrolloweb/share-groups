@@ -3,11 +3,14 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import slugify from "slugify"
 import * as jose from 'jose'
 
-
 import { db } from '../../../database'
 import { ICategory } from '../../../interfaces'
-import { Category } from '../../../models'
+import { Category, Group, Page } from '../../../models'
 import { isValidObjectId } from 'mongoose'
+
+import { v2 as cloudinary } from 'cloudinary'
+cloudinary.config( process.env.CLOUDINARY_URL || '' )
+
 
 type Data = 
     | { message: string }
@@ -160,9 +163,40 @@ const deleteCategory = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
             return res.status(401).json({ message: 'Not authorized' }) 
         }
 
-        // TODO: Eliminar páginas y grupos de la categoria
- 
-        await categoryDelete.deleteOne()
+        
+        const pages = await Page.find({ category: _id })
+        const groups = await Group.find({ category: _id })
+        
+        const pageImages = pages.map( p => {
+            if(p.img){
+                const [ fileId, extencion ] = p.img.substring( p.img.lastIndexOf('/') + 1 ).split('.')
+                return `${process.env.CLOUDINARY_FOLDER}/${fileId}`
+            }
+        }).filter( image => image )
+        
+        const groupImage = groups.map( g => {
+            if(g.img){
+                const [ fileId, extencion ] = g.img.substring( g.img.lastIndexOf('/') + 1 ).split('.')   
+                return `${process.env.CLOUDINARY_FOLDER}/${fileId}`
+            }
+        }).filter( imageId => imageId )
+
+        
+        const idsImages = [ ...pageImages, ...groupImage ]
+
+
+        if(idsImages.length >= 0){
+            idsImages.forEach( async(img) => {
+                await cloudinary.uploader.destroy( img! )
+            })
+        }
+        
+        await Promise.all([
+            await Page.deleteMany({ category: _id  }),
+            await Group.deleteMany({ category: _id  }),
+            await categoryDelete.deleteOne()
+        ])
+
         await db.disconnect()
 
         return res.status(200).json({ message: _id })
