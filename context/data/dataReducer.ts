@@ -12,6 +12,8 @@ type DataActionType =
 
     | { type: '[Data] - Load Pages', payload: IPage[] }
     | { type: '[Data] - Add New Page', payload: IPage }
+    | { type: '[Data] - Update Page', payload: IPage }
+    | { type: '[Data] - Delete Page', payload: string }
     
     | { type: '[Data] - Load Groups', payload: IGroup[] }
     | { type: '[Data] - Add New Group', payload: IGroup }
@@ -21,6 +23,7 @@ type DataActionType =
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
 
     switch (action.type) {
+        
         case '[Data] - Load Categories':
             return {
                 ...state,
@@ -56,6 +59,18 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 pages: [ ...state.pages, action.payload ]
+            }
+
+        case '[Data] - Update Page':
+            return {
+                ...state,
+                pages: state.pages.map( page => page._id === action.payload._id ? action.payload : page ) 
+            }
+        
+        case '[Data] - Delete Page':
+            return {
+                ...state,
+                pages: state.pages.filter( page => page._id !== action.payload ) 
             }
         
         // Groups

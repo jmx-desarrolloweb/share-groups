@@ -1,16 +1,61 @@
 import { FC, useState } from "react"
-import { IPage } from "../../interfaces"
-
 import NextImage from 'next/image'
+
+import { ModalDelete } from "../ui";
+import { useData } from '../../hooks/useData';
+import { ModalFormPage } from "./ModalFormPage";
+import { IPage } from "../../interfaces"
 
 interface Props {
     page: IPage
+    categoryId: string
 }
 
-export const CardPage: FC<Props> = ({ page }) => {
+export const CardPage: FC<Props> = ({ page, categoryId }) => {
 
 
     const [showOptions, setShowOptions] = useState(false)
+    const [showFormEdit, setShowFormEdit] = useState(false)
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [loadingDelete, setLoadingDelete] = useState(false)
+
+
+    const { deletePage } = useData()
+
+
+    const handleShowModalDelete = () => {
+        const body = document.querySelector<HTMLBodyElement >('body')
+        body?.classList.add('fixed-body')
+        setShowDeleteModal(true)
+    }
+
+    const handleHiddenModalDelete = () => {
+        const body = document.querySelector<HTMLBodyElement>('body')
+        body?.classList.remove('fixed-body')
+        setShowDeleteModal(false)
+    }
+
+
+    const handleDeletePage = async( method: () => Promise<{ confirm: boolean }> ) => {
+        
+        const { confirm } = await method()
+
+        if( !confirm ){
+            handleHiddenModalDelete()
+            return
+        }
+
+        setLoadingDelete(true)
+        
+        const { hasError } = await deletePage( page._id! )
+
+        if( hasError ){ 
+            return setLoadingDelete(false)
+        }
+
+         handleHiddenModalDelete()
+    }
 
 
     return (
@@ -47,20 +92,44 @@ export const CardPage: FC<Props> = ({ page }) => {
                     </button>
                     {
                         showOptions &&
-                        <div className="origin-top-right absolute right-2 mt-0 w-40 rounded-sm shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex justify-center hover:bg-gray-100" role="menu">
+                        <div className="origin-top-right absolute right-0 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                        <div className="py-2" role="none">
                             <button
-                                // onClick={logout}
-                                className="text-gray-700 flex items-center justify-center text-sm gap-1 px-2 py-2 hover:text-gray-900">
-                                <i className='bx bx-log-out' ></i>
-                                <span>Cerrar sesión</span>
+                                onClick={ () => setShowFormEdit(true) } 
+                                className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
+                                <i className='bx bx-edit-alt text-sky-600 text-xl' ></i>
+                                <span>Editar</span>
+                            </button>
+                            <button 
+                                onClick={handleShowModalDelete}
+                                className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
+                                <i className='bx bx-trash text-red-600 text-xl'></i>
+                                <span>Eliminar</span>
                             </button>
                         </div>
+                    </div>
                     }
                 </div>
             </header>
             <div>
 
             </div>
+            <ModalDelete
+                toShow={showDeleteModal} 
+                processing={loadingDelete}
+                title={'Eliminar grupo'} 
+                subtitle={`¿ Desde eliminar la página "${ page.name }" ?`} 
+                onResult={handleDeletePage}
+            />
+            {
+                showFormEdit && (
+                    <ModalFormPage
+                        pageEdit={ page }
+                        categoryId={categoryId}
+                        setShowForm={setShowFormEdit}
+                    />
+                )
+            }
         </div>
     )
 }

@@ -41,7 +41,7 @@ const CategoryPage = () => {
         
     },[query, categories])
 
-    // TODO: Listar pages
+    // TODO: Loading para cargar páginas
     const loadPages = async() => {
         if(!category?._id){ return }
         // Cargardo... start
@@ -74,7 +74,10 @@ const CategoryPage = () => {
                 : (
                     <LayoutCategory category={category}>
                         <section className='max-w-[600px] mx-auto'>
-                            <ListPage pages={pagesOfCategory} />
+                            <ListPage 
+                                pages={pagesOfCategory}
+                                categoryId={category._id!}
+                            />
                             <button
                                 onClick={()=>setShowForm(true)}
                                 className="group border-dashed border-2 border-slate-400 py-4 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"

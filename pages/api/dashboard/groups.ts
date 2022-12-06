@@ -12,8 +12,6 @@ cloudinary.config( process.env.CLOUDINARY_URL || '' )
 
 
 
-
-
 type Data = 
     | { message: string }
     | IGroup[]
@@ -170,7 +168,6 @@ const updateGroup = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             return res.status(401).json({ message: 'Not authorized' }) 
         }
 
-        // TODO: Verificar imagen
         if( groupUpdate.img && groupUpdate.img !== img  ){
             const [ fileId, extencion ] = (groupUpdate.img).substring( (groupUpdate.img).lastIndexOf('/') + 1 ).split('.')
             await cloudinary.uploader.destroy( `${process.env.CLOUDINARY_FOLDER}/${fileId}` )

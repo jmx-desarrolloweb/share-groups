@@ -48,7 +48,11 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
         setLoadingDelete(true)
         
         const { hasError } = await deleteGroup( group._id! )
-        if( hasError ){ return }
+        
+        if( hasError ){ 
+            return setLoadingDelete(false)
+        }
+
         handleHiddenModalDelete()
     }
 

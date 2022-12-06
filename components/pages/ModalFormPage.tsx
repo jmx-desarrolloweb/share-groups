@@ -25,9 +25,12 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
     // file of images
     const [file, setFile] = useState(null)
     const [fileDataURL, setFileDataURL] = useState(null)
+    const [imageEdit, setImageEdit] = useState<string>()
+
+
     const [loading, setLoading] = useState(false)
 
-    const { addNewPage } = useData()
+    const { addNewPage, updatePage } = useData()
 
     const fileInputRef = useRef<any>(null)
 
@@ -43,8 +46,8 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
             reset({
                 name: pageEdit.name,
                 url: pageEdit.url,
-                img: pageEdit.img,
             })
+            setImageEdit(pageEdit.img)
         }
     },[pageEdit])
     
@@ -98,6 +101,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
     const deleteImage = async() => {
         setFile(null)
         setFileDataURL(null)
+        setImageEdit(undefined)
     }
 
     const updateImage = async(): Promise<string | undefined> => {
@@ -124,6 +128,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
 
     const onPageSubmit = async({ name, url }:IPage) => {
         setLoading(true)
+
         const newPage:IPage = {
             name,
             url,
@@ -136,6 +141,10 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
         }
 
         if (pageEdit) {
+
+            newPage._id = pageEdit._id
+            await updatePage( newPage )
+            onCancel()
 
         } else {
             await addNewPage(newPage)
@@ -163,14 +172,14 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                 </h2>
                             </header>
                             {
-                                fileDataURL || pageEdit?.img
+                                fileDataURL || imageEdit
                                     ? (
                                         <div className="relative group mb-5 flex justify-center">
                                             <Image
                                                 priority
                                                 width={500}
                                                 height={10}
-                                                src={ fileDataURL || pageEdit?.img || profilePic}
+                                                src={ fileDataURL || imageEdit || profilePic}
                                                 alt={'Nombre de pagina'}
                                                 className='rounded' 
                                             />

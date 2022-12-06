@@ -10,18 +10,20 @@ interface ContextProps {
 
 
     // Methods
-    addNewCategory: (name: string) => Promise<{hasError:boolean; message: string }>
-    updateCategory: (category: ICategory) => Promise<{ hasError: boolean; message: string; }>
-    setUpdating: Dispatch<SetStateAction<boolean>>
-    deleteCategory: (categoryId: string) => Promise<{ hasError: boolean; message: string;}>
+    addNewCategory: ( name: string ) => Promise<{ hasError:boolean; message: string; }>
+    updateCategory: ( category: ICategory ) => Promise<{ hasError: boolean; message: string; }>
+    setUpdating   : Dispatch<SetStateAction<boolean>>
+    deleteCategory: ( categoryId: string ) => Promise<{ hasError: boolean; message: string;}>
 
-    refreshPages: (category: string) => Promise<{ hasError: boolean; pagesResp: IPage[]; }>
-    addNewPage: ( page: IPage ) => Promise<{ hasError: boolean, message: string }>
+    refreshPages  : ( category: string) => Promise<{ hasError: boolean; pagesResp: IPage[]; }>
+    addNewPage    : ( page: IPage ) => Promise<{ hasError: boolean; message: string; }>
+    updatePage    : (page: IPage) => Promise<{ hasError: boolean; message: string; }>
+    deletePage    : ( idPage: string) => Promise<{ hasError: boolean; message: string; }>
     
-    refreshGroups: (category: string) => Promise<{ hasError: boolean; groupsResp: IGroup[]; }>
-    addNewGroup: (group: IGroup) => Promise<{ hasError: boolean; message: string; }>
-    updateGroup: (group: IGroup) => Promise<{ hasError: boolean; message: string; }>
-    deleteGroup: (grupoId: string) => Promise<{ hasError: boolean; message: string; }>
+    refreshGroups : ( category: string ) => Promise<{ hasError: boolean; groupsResp: IGroup[]; }>
+    addNewGroup   : ( group: IGroup ) => Promise<{ hasError: boolean; message: string; }>
+    updateGroup   : ( group: IGroup ) => Promise<{ hasError: boolean; message: string; }>
+    deleteGroup   : ( grupoId: string ) => Promise<{ hasError: boolean; message: string; }>
 }
 
 
