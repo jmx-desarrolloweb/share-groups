@@ -14,6 +14,29 @@ export async function middleware( req: NextRequest ) {
     const { protocol, host } = req.nextUrl 
 
 
+    // ===== ===== ===== API ===== ===== =====
+
+    if (req.nextUrl.pathname.startsWith('/api/dashboard')) {
+
+        if (!token) {            
+            return NextResponse.redirect(new URL('/api/unauthorized', req.url))
+        }
+
+        try {
+            
+            await jose.jwtVerify( String(token.value ), new TextEncoder().encode(process.env.JWT_SECRET_SEED))
+
+
+            return NextResponse.next()
+
+        } catch (error) {
+            return NextResponse.redirect(new URL('/api/unauthorized', req.url))
+        }
+    }
+
+    // ===== ===== ===== Frontend ===== ===== =====
+
+
     if (req.nextUrl.pathname.startsWith('/dashboard')) {
 
 
@@ -52,6 +75,8 @@ export async function middleware( req: NextRequest ) {
     }
 
 
+
+
 }
 
 
@@ -59,6 +84,6 @@ export const config = {
     matcher: [
         '/',
         '/dashboard/:path*',
-        // '/api/admin/:path*',
+        '/api/dashboard/:path*',
     ]
 }

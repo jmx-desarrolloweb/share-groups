@@ -48,7 +48,8 @@ const getCategories = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
     
     const { 'share_groups_session_ef32f43613d682c33c56fae2d4ba528a':token } = req.cookies
     const { payload } = await jose.jwtVerify(String( token ) , new TextEncoder().encode(process.env.JWT_SECRET_SEED))
-    
+        
+
     try {
         await db.connect()
         const categories = await Category.find({ user: payload._id }).lean()
