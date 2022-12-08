@@ -4,7 +4,8 @@ import NextImage from 'next/image'
 import { ModalDelete } from "../ui";
 import { useData } from '../../hooks/useData';
 import { ModalFormPage } from "./ModalFormPage";
-import { IPage } from "../../interfaces"
+import { IGroup, IPage } from "../../interfaces"
+import { ModalRemoveGroup } from "./ModalRemoveGroup";
 
 interface Props {
     page: IPage
@@ -19,10 +20,15 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
 
+    const [showModalRemoveGroup, setShowModalRemoveGroup] = useState(false)
+    const [groupRemove, setGroupRemove] = useState<IGroup>()
+    const [lodingRemoveGroup, setLodingRemoveGroup] = useState(false)
 
-    const { deletePage } = useData()
+
+    const { deletePage, updatePage } = useData()
 
 
+    // Modal Delete Page
     const handleShowModalDelete = () => {
         const body = document.querySelector<HTMLBodyElement >('body')
         body?.classList.add('fixed-body')
@@ -33,6 +39,41 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
         const body = document.querySelector<HTMLBodyElement>('body')
         body?.classList.remove('fixed-body')
         setShowDeleteModal(false)
+    }
+
+    // Modal remove group
+    const handleShowModalRemoveGroup = ( group: IGroup ) => {
+        const body = document.querySelector<HTMLBodyElement>('body')
+        body?.classList.remove('fixed-body')
+        setGroupRemove(group)
+        setShowModalRemoveGroup(true)
+    }
+    const handleHiddenModalRemoveGroup = () => {
+        const body = document.querySelector<HTMLBodyElement>('body')
+        body?.classList.remove('fixed-body')
+        setShowModalRemoveGroup(false)
+        setGroupRemove(undefined)
+    }
+
+
+    const handleRemoveGroup = async( method: () => Promise<{ confirm: boolean }> ) => {
+
+        const { confirm } = await method()
+
+        if( !confirm ){
+            handleHiddenModalRemoveGroup()
+            return
+        }
+        setLodingRemoveGroup(true)
+        const pageUdate:IPage = {
+            ...page,
+            groups: page.groups?.filter( g => g._id !== groupRemove?._id )
+        }
+
+        await updatePage(pageUdate)
+        setLodingRemoveGroup(false)
+        handleHiddenModalRemoveGroup()
+        
     }
 
 
@@ -56,11 +97,10 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
          handleHiddenModalDelete()
     }
 
-    // TODO: Eliminar y abrir url del grupo y la página
     return (
         <div className={`mb-3 bg-white border rounded ${openGroups ? 'h-auto shadow-lg' : 'h-22'}`}> 
             <header className={`flex justify-between items-center bg-white rounded py-2 px-5 ${openGroups ? 'border-b' : ''}`}>
-                <div>
+                <div className="relative">
                     {page.img
                         ? (
                             <NextImage
@@ -77,8 +117,13 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             </div>
                         )
                     }
+                    <a 
+                        href={page.url}
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="w-[64px] h-[64px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                 </div>
-                <h3 className="text-slate-800 text-xl font-bold">{ page.name }</h3>
+                <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 text-xl font-bold hover:underline">{ page.name }</a>
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => setOpenGroups(!openGroups)}
@@ -121,20 +166,49 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             page.groups!.map(group => {
                                     return (
                                         <div key={group._id} className={`pl-10 pr-10 my-1 py-4 justify-between items-center even:bg-gray-100 ${openGroups ? 'opacity-100 flex' : 'opacity-0 hidden'}`}>
-                                            <p><i className='bx bx-minus'></i> {group.name}</p>
-                                            <div className="flex gap-5">
-                                                <button
-                                                    className='text-sky-700 hover:text-sky-800'
-                                                    // onClick={() => onEditCategory(subc)}
-                                                >
-                                                    <i className='bx bx-edit'></i>
-                                                </button>
+                                            <div className="flex items-center gap-2">
+                                                <div className="relative">
+                                                    {group.img
+                                                        ? (
+                                                            <NextImage
+                                                                priority
+                                                                width={40}
+                                                                height={40}
+                                                                src={group.img}
+                                                                alt={group.name}
+                                                                className='rounded-full shadow'
+                                                            />
+                                                        ) : (
+                                                            <div className="w-[40px] h-[40px] shadow bg-slate-200 rounded-full flex justify-center items-center">
+                                                                <span className="font-bold text-xl uppercase">{group.name.slice(0, 1)}</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    <a 
+                                                        href={group.url}
+                                                        target="_blank" 
+                                                        rel="noreferrer" 
+                                                        className="w-[40px] h-[40px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
+                                                </div>
+                                                <a href={ group.url }  target="_blank" rel="noreferrer" className="hover:underline">
+                                                    {group.name}    
+                                                </a>
+                                            </div>
+                                            <div className="flex gap-3">
                                                 <button
                                                     className='text-red-500 hover:text-red-600'
-                                                    // onClick={() => showModalDelete(subc)}
+                                                    onClick={() => handleShowModalRemoveGroup(group)}
                                                 >
                                                     <i className='bx bx-trash' ></i>
                                                 </button>
+                                                <a
+                                                    href={group.url}
+                                                    target="_blank" 
+                                                    rel="noreferrer" 
+                                                    className='text-blue-800 hover:text-blue-600'
+                                                >
+                                                    <i className='bx bx-share text-xl scale-x-[-1]'></i>
+                                                </a>
                                             </div>
                                         </div>
                                     )
@@ -143,6 +217,13 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                     </div>
                 }
             </div>
+            <ModalRemoveGroup
+                processing={lodingRemoveGroup} 
+                toShow={showModalRemoveGroup} 
+                titlePage={page.name} 
+                group={groupRemove} 
+                onResult={ handleRemoveGroup }
+            />
             <ModalDelete
                 toShow={showDeleteModal} 
                 processing={loadingDelete}

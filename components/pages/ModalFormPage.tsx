@@ -143,6 +143,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
         if (pageEdit) {
 
             newPage._id = pageEdit._id
+            newPage.groups = pageEdit.groups
             await updatePage( newPage )
             onCancel()
 
