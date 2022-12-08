@@ -92,7 +92,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                 <div className='flex gap-2'>
                     <button
                         onClick={()=>setShowFormEdit(true)}
-                        className="items-center text-sky-600 hover:text-white bg-sky-100 hover:bg-sky-500 font-bold text-sm py-2 px-3 rounded-md"
+                        className="items-center text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-500 font-bold text-sm py-2 px-3 rounded-md"
                     >
                         <i className='bx bx-edit-alt' ></i>
                     </button>

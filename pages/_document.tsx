@@ -13,7 +13,7 @@ class MyDocument extends Document {
                 <Head>
                     
                 </Head>
-                <body className='bg-indigo-50'>
+                <body className='bg-blue-50' style={{ backgroundImage: 'linear-gradient( to right, rgb(191 219 254 / .1), rgb( 191 219 254 / .1) ), url(/img/bg-pattern-light.png)' }}>
                     <Main />
                     <NextScript />
                 </body>

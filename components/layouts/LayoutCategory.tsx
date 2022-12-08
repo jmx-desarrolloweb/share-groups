@@ -106,16 +106,16 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                 toShow={showDeleteModal} 
                 processing={loadingDelete}
                 title={'Eliminar categoría'} 
-                subtitle={`¿ Desde eliminar la categoría "${ category.name }" ?`} 
+                subtitle={`¿ Desea eliminar la categoría "${ category.name }" ? Se eliminaran tambien sus páginas y grupos`} 
                 onResult={onDelete}
             />
-            <NavBar />
+            <NavBar category={ category } />
             <main className='px-5 py-5'>
                 <div className='flex items-center gap-4 group mb-5'>
                     {
                         !showForm 
                             ? (
-                                <h1 className='text-3xl font-bold text-sky-500'>
+                                <h1 className='text-3xl font-bold text-blue-500'>
                                     {category.name}
                                 </h1>
                             ):(
@@ -162,7 +162,7 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                         </button>
                         <button
                             onClick={ onShowForm }
-                            className="items-center text-sky-600 hover:text-white bg-sky-100 hover:bg-sky-500 font-bold text-sm py-2 px-2 rounded-md hidden group-hover:flex">
+                            className="items-center text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-500 font-bold text-sm py-2 px-2 rounded-md hidden group-hover:flex">
                                <i className='bx bx-edit-alt' ></i>
                         </button>
                     </div>

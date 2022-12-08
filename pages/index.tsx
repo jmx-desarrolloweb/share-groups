@@ -37,17 +37,17 @@ const IniciarSesionPage = () => {
     return (
         <div className='h-screen'>
             <img 
-                src="/img/bg-login.png"
+                src="/img/bg-login.jpg"
                 alt="bg login"
                 className="absolute h-screen w-full object-cover"
             />
             <div className="relative flex justify-center items-center w-full h-full">
                 <form 
                     onSubmit={ handleSubmit( onLoginSubmit ) }
-                    className="relative sm:w-1/2 max-w-[500px] py-14 px-10 bg-white/60 border-2 border-white/75 rounded-2xl shadow-md backdrop-blur-md"
+                    className="relative sm:w-1/2 max-w-[500px] py-14 px-10 bg-white/50 border-2 border-white/70 rounded-2xl shadow-md backdrop-blur-md"
                 >
                     <header className="mb-7">
-                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-indigo-600">Share</span> Groups</h1>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Share</span> Groups</h1>
                         <p className="text-slate-500 font-medium">Lorem ipsum dolor sit amet consectetur adipisicing elit aspernatur.</p>
                     </header>
                     <div className="flex flex-col mb-5">
@@ -86,7 +86,7 @@ const IniciarSesionPage = () => {
                         type="submit"
                         value="Iniciar Sesión"
                         disabled={ loading }
-                        className="uppercase font-bold text-white text-center py-3 w-full bg-gradient-to-r from-indigo-500 to-blue-500 rounded-md cursor-pointer hover:from-indigo-600 hover:to-blue-600 flex justify-center items-center disabled:from-indigo-300 disabled:to-blue-400 disabled:cursor-not-allowed"
+                        className="uppercase font-bold text-white text-center py-3 w-full bg-gradient-to-r from-indigo-600 to-blue-600 rounded-md cursor-pointer hover:from-indigo-700 hover:to-blue-700 flex justify-center items-center disabled:from-indigo-300 disabled:to-blue-400 disabled:cursor-not-allowed"
                     >
                         { loading
                             ? (

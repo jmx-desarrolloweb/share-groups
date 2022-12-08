@@ -20,6 +20,9 @@ type DataActionType =
     | { type: '[Data] - Update Group', payload: IGroup }
     | { type: '[Data] - Delete Group', payload: string }
 
+    | { type: '[Data] - Reset Groups Of Pages', payload: IPage[] }
+
+
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
 
     switch (action.type) {
@@ -96,7 +99,15 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 ...state,
                 groups: state.groups.filter( group => group._id !== action.payload )
             }
-                    
+
+        // Reset groups
+        case '[Data] - Reset Groups Of Pages':
+            return {
+                ...state,
+                pages: [ ...action.payload ]
+            }
+
+            
         default:
             return state
     }

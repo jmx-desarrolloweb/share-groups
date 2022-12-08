@@ -24,6 +24,11 @@ interface ContextProps {
     addNewGroup   : ( group: IGroup ) => Promise<{ hasError: boolean; message: string; }>
     updateGroup   : ( group: IGroup ) => Promise<{ hasError: boolean; message: string; }>
     deleteGroup   : ( grupoId: string ) => Promise<{ hasError: boolean; message: string; }>
+
+    resetGroupsOfPages: (idCategory: string) => Promise<{
+        hasError: boolean;
+        pagesResp: IPage[];
+    }>
 }
 
 

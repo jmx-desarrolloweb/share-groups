@@ -59,12 +59,12 @@ export const SiderBar = () => {
     }
 
     return (
-        <div className="h-screen sticky top-0 bg-white w-72 px-5 pt-5">
+        <div className="h-screen sticky top-0 bg-white w-72 px-5 pt-5 shadow">
             <div className='flex justify-between items-center py-5 mb-5'>
                 <div></div>
                 <NextLink 
                     href={'/'}
-                    className="font-bold text-center text-sky-800 uppercase flex justify-center items-center gap-1">
+                    className="font-bold text-center text-blue-800 uppercase flex justify-center items-center gap-1">
                     <i className='bx bxs-layer text-lg'></i> Share Groups
                 </NextLink>
                 <div 
@@ -94,7 +94,7 @@ export const SiderBar = () => {
                     ?(
                         <button
                             onClick={onShowForm} 
-                            className="w-full font-semibold text-sm rounded-md py-3 bg-indigo-600 text-white hover:shadow-lg hover:bg-indigo-700 transition-transform flex items-center justify-center gap-1">
+                            className="w-full font-semibold text-sm rounded-md py-3 bg-gradient-to-r from-indigo-700 to-blue-600 text-white hover:shadow-lg hover:from-indigo-800 hover:to-blue-700 transition-transform flex items-center justify-center gap-1">
                             <i className='bx bx-plus text-lg'></i> Agregar categoria
                         </button>
                     ): (
@@ -104,7 +104,7 @@ export const SiderBar = () => {
                                 disabled={loading}
                                 placeholder='Nombre de la categoría'
                                 onKeyUp={({ code })=> code === 'Escape' ? cancelForm() : undefined}
-                                className={`w-full border-b border-b-slate-300 px-2 py-1 outline-none ${ !!errors.name ? 'hover:border-b-red-600 focus:border-b-red-600' : 'hover:border-b-sky-800 focus:border-b-sky-800 ' } transition-all`}
+                                className={`w-full border-b border-b-slate-300 px-2 py-1 outline-none ${ !!errors.name ? 'hover:border-b-red-600 focus:border-b-red-600' : 'hover:border-b-blue-800 focus:border-b-blue-800 ' } transition-all`}
                                 { ...register('name', {
                                     required: 'Este campo es requerido',
                                 })}
@@ -118,7 +118,7 @@ export const SiderBar = () => {
                     categories.map( category => (
                         <li key={category._id}>
                             <NextLink 
-                                className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-sky-100 hover:text-sky-800 mb-1 ${ query.slug === `${category.slug}` ? 'bg-sky-100 text-sky-800' : 'border-transparent'}`}
+                                className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-blue-100 hover:text-sky-800 mb-1 ${ query.slug === `${category.slug}` ? 'bg-blue-100 text-sky-800' : 'border-transparent'}`}
                                 href={`/dashboard/${category.slug}`}>
                                 { category.name }
                             </NextLink>

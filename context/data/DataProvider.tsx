@@ -501,6 +501,49 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    // ============ ============ Reset ============ ============
+
+    const resetGroupsOfPages = async( idCategory:string ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
+        try {
+            const { data } = await axios.post('/api/dashboard/reset-random-groups', { idCategory })
+
+            if(data.length === 0){
+                return {
+                    hasError: false,
+                    pagesResp: [],
+                }
+            }
+
+            const newArray = state.pages.filter( page => page.category !== idCategory ) 
+            dispatch({ type: '[Data] - Reset Groups Of Pages', payload: [ ...newArray, ...data ] })
+
+            return {
+                hasError: false,
+                pagesResp: data,
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                notifyError(message)
+
+                return {
+                    hasError: true,
+                    pagesResp: []
+                }
+            }
+
+            setUpdating(false)
+            notifyError('Hubo un error inesperado')
+
+            return {
+                hasError: true,
+                pagesResp: []
+            }
+        }
+    }
+
 
     return (
         <DataContext.Provider value={{
@@ -523,6 +566,9 @@ export const DataProvider: FC<Props> = ({ children }) => {
             addNewGroup,
             updateGroup,
             deleteGroup,
+
+            // reset
+            resetGroupsOfPages,
       
         }}>
             {children}

@@ -80,7 +80,7 @@ const CategoryPage = () => {
                             />
                             <button
                                 onClick={()=>setShowForm(true)}
-                                className="group border-dashed border-2 border-slate-400 py-4 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"
+                                className="group border-dashed border-2 border-slate-400 py-4 w-full flex justify-center items-center gap-4 mb-5 mt-3 rounded hover:border-slate-800 hover:cursor-pointer"
                             >
                                 <div className='rounded-full h-12 w-12 flex justify-center items-center border border-slate-400 group-hover:border-slate-800'>
                                     <i className='bx bx-plus text-slate-400 group-hover:text-slate-800 text-2xl'></i>

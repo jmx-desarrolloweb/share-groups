@@ -46,7 +46,7 @@ const getGroups = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { category=null } = req.query
 
     if( !isValidObjectId(category) ){
-        return res.status(400).json({ message: 'El ID de la categoría NO es valido' })
+        return res.status(400).json({ message: 'El ID de la categoría NO es válido' })
     }
 
     try {
