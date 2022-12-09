@@ -80,7 +80,7 @@ const resetGroupsOfPages = async(req: NextApiRequest, res: NextApiResponse<Data>
             randomGroups.length = randomGroups.length - groupsPerPage
             
             // 3.- Guardar paginas a la DB
-            await page.save()
+            // await page.save()
             return page
         })
         
