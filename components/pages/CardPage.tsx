@@ -58,11 +58,13 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
     // TODO: Abrir enlaces al mismo tiempo
     const openAll = async() => {
 
-        // window.open("http://www.web3.com/, http://www.web2.com/", '_blank');
-        // window.open("http://www.web3.com/", 'framename');
-
-
-        // browser.tabs.create(
+        window.open(page.url, '_blank')
+        
+        if(page.groups?.length === 0){ return}
+        
+        page.groups?.forEach(group => {
+            window.open(group.url, '_blank')
+        });
     }
 
 
