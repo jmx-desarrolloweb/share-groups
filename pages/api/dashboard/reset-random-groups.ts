@@ -70,20 +70,39 @@ const resetGroupsOfPages = async(req: NextApiRequest, res: NextApiResponse<Data>
         }
 
         // 2.- Asignar grupos a las paginas
+        // await pagesOfCategory.map( async(page, index) => {
+
+        //     const groupsPerPage = Math.ceil( randomGroups.length / (pagesOfCategory.length - index) )
+            
+        //     page.groups = randomGroups.filter( ( r, index ) => index >= (randomGroups.length - groupsPerPage) )
+
+        //     // Elimianr grupos del array
+        //     randomGroups.length = randomGroups.length - groupsPerPage
+            
+        //     // 3.- Guardar paginas a la DB
+        //     await page.save()
+        //     return page
+        // })
+
+                
+
+        // 2.- Asignar grupos a las paginas
         await pagesOfCategory.map( async(page, index) => {
 
             const groupsPerPage = Math.ceil( randomGroups.length / (pagesOfCategory.length - index) )
             
-            page.groups = randomGroups.filter( ( r, index ) => index >= (randomGroups.length - groupsPerPage) )
-
+            const newGroups = [...randomGroups.filter( ( r, index ) => index >= (randomGroups.length - groupsPerPage) )]
+            page.groups = newGroups
             // Elimianr grupos del array
             randomGroups.length = randomGroups.length - groupsPerPage
             
             // 3.- Guardar paginas a la DB
-            // await page.save()
+            await Page.findByIdAndUpdate( page._id, { groups: newGroups }, { new: true } )
+            
             return page
         })
-        
+
+                
 
         // 4.- Desconectar la DB
         await db.disconnect()
