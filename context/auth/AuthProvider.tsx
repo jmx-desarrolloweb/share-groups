@@ -54,10 +54,10 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 }
 
 
-    const loginUser = async ( email: string, password:string ):Promise<{ hasError: boolean, message?: string }> => {
+    const loginUser = async ( username: string, password:string ):Promise<{ hasError: boolean, message?: string }> => {
         try {
 
-            const { data } = await axios.post('/api/auth/login', { email, password })
+            const { data } = await axios.post('/api/auth/login', { username, password })
             const { token, user } = data
 
             Cookies.set( cookieAuthKey, token)

@@ -55,6 +55,16 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
         setGroupRemove(undefined)
     }
 
+    // TODO: Abrir enlaces al mismo tiempo
+    const openAll = async() => {
+
+        // window.open("http://www.web3.com/, http://www.web2.com/", '_blank');
+        // window.open("http://www.web3.com/", 'framename');
+
+
+        // browser.tabs.create(
+    }
+
 
     const handleRemoveGroup = async( method: () => Promise<{ confirm: boolean }> ) => {
 
@@ -141,10 +151,22 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             role="menu"
                         >
                             <div className="py-2" role="none">
+                                {/* <button
+                                    onClick={ openAll } 
+                                    className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
+                                    <i className='bx bx-window-alt text-slate-600 text-xl'></i>
+                                    <span>Ver</span>
+                                </button> */}
+                                <button
+                                    onClick={ openAll } 
+                                    className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
+                                    <i className='bx bx-paperclip text-slate-600 text-xl'></i>
+                                    <span>Abrir enlaces</span>
+                                </button>
                                 <button
                                     onClick={ () => setShowFormEdit(true) } 
                                     className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
-                                    <i className='bx bx-edit-alt text-blue-600 text-xl' ></i>
+                                    <i className='bx bx-edit-alt text-blue-500 text-xl' ></i>
                                     <span>Editar</span>
                                 </button>
                                 <button 

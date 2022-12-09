@@ -1,4 +1,3 @@
-// import profilePic from '../../public/img/facebook-page.jpg'
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';

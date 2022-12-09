@@ -4,6 +4,7 @@ import bcryptjs from 'bcryptjs'
 import { db } from '../../../database'
 import { User } from '../../../models'
 import { jwt } from '../../../utils'
+import { IUser } from '../../../interfaces'
 
 
 
@@ -12,6 +13,7 @@ type Data =
     | {
         token: string
         user: {
+            name: string
             email: string
         }
       }
@@ -31,17 +33,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const loginUser = async( req: NextApiRequest, res: NextApiResponse<Data> ) => {
 
-    const { email='', password='' } = req.body
+    const { username='', password='' } = req.body
 
-    if ([email, password].includes('')) {
+    if ([username, password].includes('')) {
         return res.status(400).json({ message: 'El usuario y la contraseña son requeridos' })
     }
 
     await db.connect()
-    const user = await User.findOne({ email })
+    const userByEmail = await User.findOne({ email:username })
+    const userByName = await User.findOne({ name:username })
     await db.disconnect()
 
-    if (!user) {
+
+    if (!userByEmail && !userByName) {
+        return res.status(400).json({ message: 'Usuario o Contaseña no válidos' })
+    }
+    
+    const user = userByEmail ? userByEmail : userByName
+
+    if(!user){
         return res.status(400).json({ message: 'Usuario o Contaseña no válidos' })
     }
     
@@ -54,6 +64,7 @@ const loginUser = async( req: NextApiRequest, res: NextApiResponse<Data> ) => {
     return res.status(200).json({
         token,
         user: {
+            name: user.name,
             email: user.email
         }
     })
