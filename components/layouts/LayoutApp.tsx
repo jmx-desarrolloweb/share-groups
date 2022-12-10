@@ -23,9 +23,9 @@ export const LayoutApp: FC<Props> = ({ children }) => {
     return (
         <>
             <Head>
-                <title>JMX - Share Groups</title>
+                <title>Share Groups</title>
                 <meta name="description" content="Aplicación para la asignación de grupos a páginas" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon_jmx.png" />
             </Head>
             <div className="flex">
                 
