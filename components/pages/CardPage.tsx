@@ -55,16 +55,17 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
         setGroupRemove(undefined)
     }
 
-    // TODO: Abrir enlaces al mismo tiempo
+
     const openAll = async() => {
 
-        window.open(page.url, '_blank')
+        await window.open(page.url, '_blank')
+
+        if(!page.groups || page.groups?.length === 0){ return}
         
-        if(page.groups?.length === 0){ return}
+        for await(const group of page.groups) {
+            await window.open(group.url, '_blank')
+        }
         
-        page.groups?.forEach(group => {
-            window.open(group.url, '_blank')
-        });
     }
 
 

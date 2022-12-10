@@ -47,7 +47,7 @@ const IniciarSesionPage = () => {
                 >
                     <header className="mb-7">
                         <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Share</span> Groups</h1>
-                        <p className="text-slate-500 font-medium">Lorem ipsum dolor sit amet consectetur adipisicing elit aspernatur.</p>
+                        <p className="text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p>
                     </header>
                     <div className="flex flex-col mb-5">
                         <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Usuario</label>
