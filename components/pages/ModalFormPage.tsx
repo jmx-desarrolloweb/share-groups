@@ -175,14 +175,13 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                             {
                                 fileDataURL || imageEdit
                                     ? (
-                                        <div className="relative group mb-5 flex justify-center w-48 shadow p-3 mx-auto">
+                                        <div className="relative group mb-5 flex justify-center w-52 h-52 shadow p-3 mx-auto">
                                             <Image
                                                 priority
-                                                width={500}
-                                                height={10}
+                                                fill
                                                 src={ fileDataURL || imageEdit || profilePic}
                                                 alt={'Nombre de pagina'}
-                                                className='rounded-full shadow' 
+                                                className='rounded-full cover p-3' 
                                             />
                                             <button
                                                 type="button"

@@ -177,15 +177,14 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                             {
                                 fileDataURL || imageEdit
                                     ? (
-                                        <div className="relative group mb-5 flex justify-center w-48 shadow p-3 mx-auto">
-                                            <Image
-                                                priority
-                                                width={500}
-                                                height={10}
-                                                src={ fileDataURL || imageEdit || profilePic}
-                                                alt={'Nombre de pagina'}
-                                                className='rounded-full shadow' 
-                                            />
+                                        <div className="relative group mb-5 flex justify-center w-52 h-52 shadow mx-auto">
+                                                <Image
+                                                    priority
+                                                    fill
+                                                    src={ fileDataURL || imageEdit || profilePic}
+                                                    alt={'Nombre de pagina'}
+                                                    className='rounded-full cover p-3' 
+                                                />
                                             <button
                                                 onClick={deleteImage}
                                                 type="button"

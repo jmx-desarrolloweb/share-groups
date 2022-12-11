@@ -62,16 +62,15 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
         <>
             <li className="flex w-full justify-between items-center bg-white px-3 py-2 rounded border mb-2">
                 <div className="flex items-center gap-4">
-                    <a href={group.url} target="_blank" rel="noreferrer">
+                    <div className="relative w-[48px] h-[48px]">
                         {group.img
                             ? (
                                 <NextImage
                                     priority
-                                    width={48}
-                                    height={48}
+                                    fill
                                     src={group.img}
                                     alt={group.name}
-                                    className='rounded-full shadow border'
+                                    className='rounded-full shadow border cover'
                                 />
                             ) : (
                                 <div className="w-[48px] h-[48px] shadow bg-slate-200 rounded-full flex justify-center items-center">
@@ -79,7 +78,12 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                                 </div>
                             )
                         }
-                    </a>
+                        <a 
+                        href={group.url}
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="w-[48px] h-[48px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
+                    </div>
                     <a 
                         href={group.url}
                         target="_blank"

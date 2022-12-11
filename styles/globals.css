@@ -10,6 +10,17 @@ body, html {
 body.fixed-body {
     overflow:hidden
 }
+.fill {
+  object-fit: fill;
+}
+
+.contain {
+  object-fit: contain;
+}
+
+.cover {
+  object-fit: cover;
+}
 
 
 /* Loading */

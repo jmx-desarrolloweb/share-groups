@@ -192,16 +192,15 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                     return (
                                         <div key={group._id} className={`pl-10 pr-10 my-1 py-4 justify-between items-center even:bg-gray-100 ${openGroups ? 'opacity-100 flex' : 'opacity-0 hidden'}`}>
                                             <div className="flex items-center gap-2">
-                                                <div className="relative">
+                                                <div className="relative w-[40px] h-[40px]">
                                                     {group.img
                                                         ? (
                                                             <NextImage
                                                                 priority
-                                                                width={40}
-                                                                height={40}
+                                                                fill
                                                                 src={group.img}
                                                                 alt={group.name}
-                                                                className='rounded-full shadow'
+                                                                className='rounded-full shadow cover'
                                                             />
                                                         ) : (
                                                             <div className="w-[40px] h-[40px] shadow bg-slate-200 rounded-full flex justify-center items-center">
