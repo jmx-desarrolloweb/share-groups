@@ -4,20 +4,25 @@ import { FC } from "react"
 interface Props {
     toShow: boolean
     processing?: boolean
+    processingAll?: boolean
     title: string
     subtitle: string
-    onResult: ( method: () => Promise<{ confirm: boolean }> ) => void
+    onResult: ( method: () => Promise<{ confirm: boolean, random?: boolean }> ) => void
 }
 
 
-export const ModalConfirm:FC<Props> = ({ toShow, processing, title, subtitle, onResult }) => {
+export const ModalConfirm:FC<Props> = ({ toShow, processing, processingAll, title, subtitle, onResult }) => {
 
-    const resultConfirm = async() => {
-        return { confirm: true }
+    const resultConfirmRandom = async() => {
+        return { confirm: true, random: true }
+    }
+
+    const resultConfirmAll = async() => {
+        return { confirm: true, random: false }
     }
     
     const resultCancel = async() => {
-        return { confirm: false }
+        return { confirm: false  }
     }
 
     return (
@@ -45,37 +50,66 @@ export const ModalConfirm:FC<Props> = ({ toShow, processing, title, subtitle, on
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:justify-between sm:px-6">
+                                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-1">
+                                            <button
+                                                type="button"
+                                                disabled={processing || processingAll}
+                                                onClick={() => onResult(resultConfirmAll)}
+                                                className="flex w-full justify-center items-center rounded-md border-2 px-4 py-2 text-base font-medium text-green-600 border-green-600 hover:border-green-700 hover:text-green-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                                                {
+                                                    processingAll
+                                                        ? (
+                                                            <svg className="animate-spin h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle
+                                                                    className="opacity-25"
+                                                                    cx="12"
+                                                                    cy="12"
+                                                                    r="10"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="4">
+                                                                </circle>
+                                                                <path
+                                                                    className="opacity-75"
+                                                                    fill="currentColor"
+                                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                                </path>
+                                                            </svg>
+                                                        )
+                                                        : 'Todos'
+                                                }
+                                            </button>
+                                            <button
+                                                type="button"
+                                                disabled={processing || processingAll}
+                                                onClick={() => onResult(resultConfirmRandom)}
+                                                className="flex w-full justify-center items-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white bg-green-600 hover:bg-green-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                                                {
+                                                    processing
+                                                        ? (
+                                                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle
+                                                                    className="opacity-25"
+                                                                    cx="12"
+                                                                    cy="12"
+                                                                    r="10"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="4">
+                                                                </circle>
+                                                                <path
+                                                                    className="opacity-75"
+                                                                    fill="currentColor"
+                                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                                </path>
+                                                            </svg>
+                                                        )
+                                                        : 'Random'
+                                                }
+                                            </button>
+                                        </div>
                                         <button
                                             type="button"
-                                            disabled={processing}
-                                            onClick={() => onResult(resultConfirm)}
-                                            className="flex w-full justify-center items-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:opacity-40 disabled:cursor-not-allowed">
-                                            {
-                                                processing
-                                                    ? (
-                                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle
-                                                                className="opacity-25"
-                                                                cx="12"
-                                                                cy="12"
-                                                                r="10"
-                                                                stroke="currentColor"
-                                                                strokeWidth="4">
-                                                            </circle>
-                                                            <path
-                                                                className="opacity-75"
-                                                                fill="currentColor"
-                                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                            </path>
-                                                        </svg>
-                                                    )
-                                                    : 'Confirmar'
-                                            }
-                                        </button>
-                                        <button
-                                            type="button"
-                                            disabled={processing}
+                                            disabled={processing || processingAll}
                                             onClick={() => onResult(resultCancel)}
                                             className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-70 disabled:cursor-not-allowed">
                                             Cancelar

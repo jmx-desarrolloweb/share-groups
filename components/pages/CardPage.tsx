@@ -113,13 +113,13 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
     return (
         <div className={`mb-3 bg-white border rounded ${openGroups ? 'h-auto shadow-lg' : 'h-22'}`}> 
             <header className={`flex justify-between items-center bg-white rounded py-2 px-5 ${openGroups ? 'border-b' : ''}`}>
-                <div className="relative">
+                <div className="relative w-[64px] h-[64px]">
                     {page.img
                         ? (
                             <NextImage
                                 priority
-                                width={64}
-                                height={64}
+                                fill
+                                sizes="(max-width: 64px) 64px"
                                 src={page.img}
                                 alt={page.name}
                                 className='rounded-full shadow'
@@ -198,6 +198,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                                             <NextImage
                                                                 priority
                                                                 fill
+                                                                sizes="(max-width: 40px) 40px"
                                                                 src={group.img}
                                                                 alt={group.name}
                                                                 className='rounded-full shadow cover'

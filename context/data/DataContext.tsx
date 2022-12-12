@@ -25,7 +25,7 @@ interface ContextProps {
     updateGroup   : ( group: IGroup ) => Promise<{ hasError: boolean; message: string; }>
     deleteGroup   : ( grupoId: string ) => Promise<{ hasError: boolean; message: string; }>
 
-    resetGroupsOfPages: (idCategory: string) => Promise<{
+    resetGroupsOfPages: (idCategory: string, random?:boolean) => Promise<{
         hasError: boolean;
         pagesResp: IPage[];
     }>

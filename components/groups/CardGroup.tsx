@@ -3,7 +3,7 @@ import { FC, SetStateAction, useState, useEffect } from 'react';
 import NextImage from 'next/image'
 
 import { IGroup } from "../../interfaces"
-import { Checkbox, ModalDelete } from "../ui"
+import { ModalDelete } from "../ui"
 import { useData } from '../../hooks/useData';
 import { ModalFormGroup } from './ModalFormGroup';
 
@@ -23,7 +23,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
 
     const [activeGroup, setActiveGroup] = useState<boolean>(group.active)
 
-    const { deleteGroup } = useData()
+    const { deleteGroup, updateGroup } = useData()
 
 
     useEffect(()=>{
@@ -43,8 +43,17 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
         setShowDeleteModal(false)
     }
 
-    const toggleActive = () => {
-        setActiveGroup(!activeGroup)
+    const toggleActive = async() => {
+
+        const beforeStateGroup = { ...group }
+        setActiveGroup(!beforeStateGroup.active)
+        
+        const { hasError } = await updateGroup( { ...group, active: !beforeStateGroup.active} )
+        
+        if(hasError ){
+            setActiveGroup(beforeStateGroup.active)
+        }
+
     }
 
     const onDelete = async( method: () => Promise<{ confirm: boolean }> ) => {
@@ -94,7 +103,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                         href={group.url}
                         target="_blank" 
                         rel="noreferrer" 
-                        className="w-[48px] h-[48px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
+                        className="w-[50px] h-[50px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                     </div>
                     <a 
                         href={group.url}
@@ -109,7 +118,6 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                     <label htmlFor={`group-toggle-${group._id}`} className="inline-flex relative items-center cursor-pointer">
                         <input
                             type="checkbox"
-                            disabled
                             id={`group-toggle-${group._id}`}
                             checked={activeGroup}
                             onChange={toggleActive}

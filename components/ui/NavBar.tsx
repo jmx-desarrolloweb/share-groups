@@ -16,6 +16,7 @@ export const NavBar:FC<Props> = ({ category }) => {
     
     const [showModal, setShowModal] = useState(false)
     const [loadingReset, setLoadingReset] = useState(false)
+    const [loadingResetAll, setLoadingResetAll] = useState(false)
 
     const router = useRouter()
     const { query, asPath } = router
@@ -37,21 +38,31 @@ export const NavBar:FC<Props> = ({ category }) => {
 
 
     
-    const handleRandom = async( method: () => Promise<{ confirm: boolean }> ) => {
+    const handleRandom = async( method: () => Promise<{ confirm: boolean, random?: boolean }> ) => {
 
 
-        const { confirm } = await method()
+        const { confirm, random } = await method()
 
         if( !confirm ){
             handleHiddenModal()
             return
         }
 
-        setLoadingReset(true)
-        
-        const { hasError } = await resetGroupsOfPages( category._id! )
+        if(random){
+            setLoadingReset(true)
+        }else{
+            setLoadingResetAll(true)
+        }
 
-        setLoadingReset(false)
+        
+        const { hasError } = await resetGroupsOfPages( category._id!, random )
+
+
+        if(random){
+            setLoadingReset(false)
+        }else{
+            setLoadingResetAll(false)
+        }
         
         if(hasError){ return }
         
@@ -92,6 +103,7 @@ export const NavBar:FC<Props> = ({ category }) => {
             <ModalConfirm 
                 toShow={ showModal }
                 processing={ loadingReset } 
+                processingAll={ loadingResetAll } 
                 title={`¿Reasignar grupos de "${ category.name }"?`} 
                 subtitle={'Se sobrescribirán los grupos asignados actualmente'} 
                 onResult={ handleRandom }

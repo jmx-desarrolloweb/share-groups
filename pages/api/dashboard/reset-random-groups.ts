@@ -26,7 +26,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const resetGroupsOfPages = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
-    const { idCategory = '' } = req.body
+    const { idCategory = '', random = true } = req.body
     
     if( !isValidObjectId(idCategory) ){
         return res.status(400).json({ message: 'El ID de la categoría NO es válido' })
@@ -54,46 +54,59 @@ const resetGroupsOfPages = async(req: NextApiRequest, res: NextApiResponse<Data>
             return res.status(400).json({ message: 'Hay páginas para asignar grupos' }) 
         }
 
-        let groupsOfCategory = await Group.find({ category: idCategory }) 
+        let groupsOfCategory = await Group.find({ category: idCategory, active: true }) 
         if(groupsOfCategory.length === 0){
             return res.status(400).json({ message: 'Hay grupos para asignar a las páginas' }) 
         }
 
-        // 1.- Ordenar de forma aleatorioa los grupos
-        let randomGroups:IGroup[] = []
-        while (groupsOfCategory.length > 0) {
-
-            const randomIndex = Math.floor( Math.random() * groupsOfCategory.length )
-            randomGroups.push(groupsOfCategory[randomIndex])
-            groupsOfCategory = groupsOfCategory.filter( ( g, index ) => index !== randomIndex )
-
-        }
+        if(random) {
+            // === === === RANDOM === === ===
+            // 1.- Ordenar de forma aleatorioa los grupos
+            let randomGroups:IGroup[] = []
+            while (groupsOfCategory.length > 0) {
+    
+                const randomIndex = Math.floor( Math.random() * groupsOfCategory.length )
+                randomGroups.push(groupsOfCategory[randomIndex])
+                groupsOfCategory = groupsOfCategory.filter( ( g, index ) => index !== randomIndex )
+    
+            }                
+    
+            // 2.- Asignar grupos a las paginas
+            const newPagesUpdate = pagesOfCategory.map( (page, index) => {
+    
+                const groupsPerPage = Math.ceil( randomGroups.length / (pagesOfCategory.length - index) )
                 
-
-        // 2.- Asignar grupos a las paginas
-        const newPagesUpdate = pagesOfCategory.map( (page, index) => {
-
-            const groupsPerPage = Math.ceil( randomGroups.length / (pagesOfCategory.length - index) )
+                const newGroups = [...randomGroups.filter( ( r, index ) => index >= (randomGroups.length - groupsPerPage) )]
+                page.groups = newGroups
+                // Elimianr grupos del array
+                randomGroups.length = randomGroups.length - groupsPerPage
+                
+                return page
+            })
             
-            const newGroups = [...randomGroups.filter( ( r, index ) => index >= (randomGroups.length - groupsPerPage) )]
-            page.groups = newGroups
-            // Elimianr grupos del array
-            randomGroups.length = randomGroups.length - groupsPerPage
-            
-            return page
-        })
-        
-        // 3.- Guardar paginas a la DB
-        for await (const page of newPagesUpdate) {
-            await Page.findByIdAndUpdate( page._id, { groups: page.groups } )
+            // 3.- Guardar paginas a la DB
+            for await (const page of newPagesUpdate) {
+                await Page.findByIdAndUpdate( page._id, { groups: page.groups } )
+            }
+                
+            await db.disconnect()
+            return res.status(200).json(newPagesUpdate)
+
+        } else {
+            // === === === All === === ===
+            const pagesUpdate = pagesOfCategory.map( page => {
+                page.groups = groupsOfCategory
+                return page
+            })
+
+            for await (const page of pagesUpdate) {
+                await Page.findByIdAndUpdate( page._id, { groups: page.groups } )
+            }
+
+            await db.disconnect()
+            return res.status(200).json(pagesUpdate)
         }
-            
-        // 4.- Desconectar la DB
-        await db.disconnect()
 
-
-        // 5.- Retornar el nuevo arreglo de las páginas con los grupos asignados
-        return res.status(200).json(newPagesUpdate)
         
     } catch (error) {
         await db.disconnect()

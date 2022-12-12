@@ -351,7 +351,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     const refreshGroups = async( category:string ):Promise<{ hasError:boolean; groupsResp: IGroup[] }> => {
         try {
-            const { data } = await axios.get<IPage[]>('/api/dashboard/groups', { params: { category } })
+            const { data } = await axios.get<IGroup[]>('/api/dashboard/groups', { params: { category } })
             
             if(data.length === 0){
                 return {
@@ -503,9 +503,9 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     // ============ ============ Reset ============ ============
 
-    const resetGroupsOfPages = async( idCategory:string ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
+    const resetGroupsOfPages = async( idCategory:string, random = true ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
         try {
-            const { data } = await axios.post('/api/dashboard/reset-random-groups', { idCategory })
+            const { data } = await axios.post('/api/dashboard/reset-random-groups', { idCategory, random })
 
             if(data.length === 0){
                 return {

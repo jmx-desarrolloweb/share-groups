@@ -189,6 +189,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                                 <Image
                                                     priority
                                                     fill
+                                                    sizes="(max-width: 208px) 208px"
                                                     src={ fileDataURL || imageEdit || profilePic}
                                                     alt={'Nombre de pagina'}
                                                     className='rounded-full cover p-3' 
