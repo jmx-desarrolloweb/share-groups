@@ -247,7 +247,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex w-full justify-center items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:bg-red-400 disabled:cursor-not-allowed">
+                                className="flex w-full justify-center items-center rounded-md border border-transparent bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-800 hover:to-blue-800 px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed">
                                 {
                                     loading
                                         ? (

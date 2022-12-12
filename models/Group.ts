@@ -9,6 +9,8 @@ const groupSchema = new Schema({
     img     : { type: String },
 
     category: { type: mongoose.Types.ObjectId,  ref: 'Category', },
+
+    active  : { type: Boolean, default: true }
 },{
     timestamps: true
 })

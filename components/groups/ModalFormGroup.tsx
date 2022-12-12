@@ -10,6 +10,7 @@ import profilePic from '../../public/img/facebook-page.jpg'
 import axios from 'axios';
 import { IGroup } from "../../interfaces";
 import { useData } from "../../hooks/useData";
+import { Checkbox } from "../ui";
 
 
 const imageMimeType = /image\/(png|jpg|jpeg|gif|webp)/i;
@@ -36,10 +37,11 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
 
     const fileInputRef = useRef<any>(null)
 
-    const { register, handleSubmit, formState:{ errors }, reset, } = useForm<IGroup>({
+    const { register, handleSubmit, formState:{ errors }, reset, getValues, setValue } = useForm<IGroup>({
         defaultValues: {
             name:'',
             url: '',
+            active: true
         }
     })
 
@@ -48,6 +50,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             reset({
                 name: groupEdit.name,
                 url: groupEdit.url,
+                active: groupEdit.active,
             })
             setImageEdit(groupEdit.img)
         }
@@ -122,17 +125,22 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
         }
     }
 
+    const toggleGroupActive = () => {
+        setValue('active', !getValues('active') ,{ shouldValidate: true })
+    }
+
     const onCancel = async() => {
         setShowForm(false)
     }
 
-    const onPageSubmit = async({ name, url }:IPage) => {
+    const onPageSubmit = async({ name, url, active }:IGroup) => {
         setLoading(true)
         
         const newGroup:IGroup = {
             name,
             url: url.trim(),
-            category: categoryId
+            category: categoryId,
+            active
         }
 
         if(file){
@@ -237,6 +245,9 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                     <p className="text-sm text-red-600 mt-2">{errors.url.message}</p>
                                 }
                             </div>
+                            <div className="flex flex-col gap-1 mb-4 w-full">
+                                <Checkbox value={ getValues('active')! } onCheckChange={toggleGroupActive} label={'Activo'} />
+                            </div>
                             <input
                                 type="file"
                                 style={{ display: 'none' }}
@@ -249,7 +260,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex w-full justify-center items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:bg-red-400 disabled:cursor-not-allowed">
+                                className="flex w-full justify-center items-center rounded-md border border-transparent bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-800 hover:to-blue-800 px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 sm:ml-3 sm:w-28 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed">
                                 {
                                     loading
                                         ? (

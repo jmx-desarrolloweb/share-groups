@@ -84,18 +84,10 @@ export const NavBar:FC<Props> = ({ category }) => {
                 </nav>
                 <button
                     onClick={ handleShowModal } 
-                    className='font-semibold text-sm rounded-md py-2 px-8 bg-gradient-to-r from-indigo-700 to-blue-700 over:from-indigo-800 hover:to-blue-800 text-white hover:shadow-lg transition-transform flex items-center justify-center gap-1'
+                    className='font-semibold text-sm rounded-md py-2 px-8 bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-800 hover:to-blue-800 text-white hover:shadow-lg transition-transform flex items-center justify-center gap-1'
                 >
                     <i className='bx bx-refresh text-2xl' ></i>
                 </button>
-                {/* <button
-                    onClick={ handleShowModal } 
-                    className='group font-semibold text-sm rounded-md bg-gradient-to-r from-indigo-700 to-blue-700 p-1'
-                >
-                     <span className="flex items-center justify-center rounded-md bg-white py-1 px-8 group-hover:bg-gradient-to-r group-hover:from-indigo-700 group-hover:to-blue-700">
-                        <i className='bx bx-refresh text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-blue-800 hover:text-white group-hover:text-white font-bold' ></i>
-                     </span>
-                </button> */}
             </div>
             <ModalConfirm 
                 toShow={ showModal }

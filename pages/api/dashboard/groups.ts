@@ -85,7 +85,7 @@ const getGroups = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    const { name='', url='', img=null, category=null  } = req.body
+    const { name='', url='', img=null, category=null, active=true  } = req.body
 
     if( !isValidObjectId(category) ){
         return res.status(400).json({ message: 'El ID de la categoría NO es valido' })
@@ -120,7 +120,8 @@ const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             url, 
             slug, 
             img,
-            category
+            category,
+            active
         })
 
         await newGroup.save()
@@ -139,7 +140,7 @@ const addNewGroup = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 const updateGroup = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    const { _id='', img=null, name='', url='' } = req.body
+    const { _id='', img=null, name='', url='', active=true } = req.body
 
     if(!isValidObjectId(_id)){
         return res.status(400).json({ message: 'El ID del grupo NO es valido' })
@@ -179,6 +180,7 @@ const updateGroup = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         groupUpdate.slug = slug
         groupUpdate.url = url
         groupUpdate.img = img
+        groupUpdate.active = active
 
         await groupUpdate.save()
         await db.disconnect()

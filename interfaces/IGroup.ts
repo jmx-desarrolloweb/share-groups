@@ -6,6 +6,8 @@ export interface IGroup {
     img?     : string;
     category : string;
 
+    active  : boolean
+
     createdAt?: string;
     updatedAt?: string;
 }
