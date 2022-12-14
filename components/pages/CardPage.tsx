@@ -1,7 +1,7 @@
 import { FC, useState } from "react"
 import NextImage from 'next/image'
 
-import { ModalDelete } from "../ui";
+import { ModalDelete, ModalListGroup } from "../ui";
 import { useData } from '../../hooks/useData';
 import { ModalFormPage } from "./ModalFormPage";
 import { IGroup, IPage } from "../../interfaces"
@@ -19,13 +19,19 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
+    
+
+    const [loadingUpdatingPage, setLoadingUpdatingPage] = useState(false)
+
+    const [showModalListGroup, setShowModalListGroup] = useState(false)
+    const [loadingGroups, setLoadingGroups] = useState(false)
 
     const [showModalRemoveGroup, setShowModalRemoveGroup] = useState(false)
     const [groupRemove, setGroupRemove] = useState<IGroup>()
-    const [lodingRemoveGroup, setLodingRemoveGroup] = useState(false)
 
 
-    const { deletePage, updatePage } = useData()
+
+    const { deletePage, updatePage, groups, refreshGroups } = useData()
 
 
     // Modal Delete Page
@@ -39,6 +45,31 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
         const body = document.querySelector<HTMLBodyElement>('body')
         body?.classList.remove('fixed-body')
         setShowDeleteModal(false)
+    }
+
+    // Modal Add New Group
+    const handleShowModalListGroup = async( ) => {
+        const body = document.querySelector<HTMLBodyElement >('body')
+        body?.classList.add('fixed-body')
+
+        setLoadingGroups(true)
+        setShowModalListGroup(true)
+
+        const groupsByCategory = groups.filter( group => group.category === categoryId )
+        
+        if(groupsByCategory.length === 0){
+            await refreshGroups( categoryId ) 
+        }
+
+        setLoadingGroups(false)
+
+    
+    }
+
+    const handleHiddenModalListGroup = ( ) => {
+        const body = document.querySelector<HTMLBodyElement>('body')
+        body?.classList.remove('fixed-body')
+        setShowModalListGroup(false)
     }
 
     // Modal remove group
@@ -69,6 +100,26 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
     }
 
 
+    const handleAddGroup = async ( newGroup: IGroup | undefined ) => {
+
+        if( !newGroup ){
+            handleHiddenModalListGroup()
+            return
+        }
+
+        setLoadingUpdatingPage(true)
+
+        page.groups?.push(newGroup)
+        const { hasError } = await updatePage(page)
+
+        setLoadingUpdatingPage(false)
+
+        if( hasError ){ return }
+
+        handleHiddenModalListGroup()
+
+    }
+
     const handleRemoveGroup = async( method: () => Promise<{ confirm: boolean }> ) => {
 
         const { confirm } = await method()
@@ -77,14 +128,17 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
             handleHiddenModalRemoveGroup()
             return
         }
-        setLodingRemoveGroup(true)
+        setLoadingUpdatingPage(true)
         const pageUdate:IPage = {
             ...page,
             groups: page.groups?.filter( g => g._id !== groupRemove?._id )
         }
 
-        await updatePage(pageUdate)
-        setLodingRemoveGroup(false)
+        const { hasError } = await updatePage(pageUdate)
+        setLoadingUpdatingPage(false)
+
+        if(hasError){ return }
+
         handleHiddenModalRemoveGroup()
         
     }
@@ -154,12 +208,12 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             role="menu"
                         >
                             <div className="py-2" role="none">
-                                {/* <button
-                                    onClick={ openAll } 
+                                <button
+                                    onClick={ handleShowModalListGroup } 
                                     className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
-                                    <i className='bx bx-window-alt text-slate-600 text-xl'></i>
-                                    <span>Ver</span>
-                                </button> */}
+                                    <i className='bx bx-plus text-emerald-600 text-xl'></i>
+                                    <span>Añadir grupo</span>
+                                </button>
                                 <button
                                     onClick={ openAll } 
                                     className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
@@ -242,8 +296,21 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                     </div>
                 }
             </div>
+            {
+                showModalListGroup && (
+                    <ModalListGroup 
+                        processing={loadingUpdatingPage}
+                        pageName={ page.name }
+                        loadingGroups={loadingGroups}
+                        idCategory={ categoryId }
+                        currentGroups = {page.groups as IGroup[]}
+                        handleAddGroup={ handleAddGroup }
+                    />
+                )
+            }
+            
             <ModalRemoveGroup
-                processing={lodingRemoveGroup} 
+                processing={loadingUpdatingPage} 
                 toShow={showModalRemoveGroup} 
                 titlePage={page.name} 
                 group={groupRemove} 

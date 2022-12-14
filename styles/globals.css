@@ -22,6 +22,31 @@ body.fixed-body {
   object-fit: cover;
 }
 
+.custom-scroll::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.custom-scroll::-webkit-scrollbar:vertical {
+  width:8px;
+}
+
+.custom-scroll::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+  display: none;
+} 
+
+.custom-scroll::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #dbdbdb;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  border-radius: 8px;  
+}
 
 /* Loading */
 .loader {

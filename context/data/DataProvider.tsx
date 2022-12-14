@@ -350,6 +350,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
     // ============ ============ Groups ============ ============
 
     const refreshGroups = async( category:string ):Promise<{ hasError:boolean; groupsResp: IGroup[] }> => {
+        
+
         try {
             const { data } = await axios.get<IGroup[]>('/api/dashboard/groups', { params: { category } })
             
