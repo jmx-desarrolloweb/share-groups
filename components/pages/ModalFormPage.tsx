@@ -132,7 +132,8 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
         const newPage:IPage = {
             name,
             url: url.trim(),
-            category: categoryId
+            category: categoryId,
+            img: imageEdit
         }
 
         if(file){
@@ -188,7 +189,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                                 type="button"
                                                 onClick={deleteImage}
                                                 disabled={loading}  
-                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
+                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block disabled:opacity-0">
                                                 <i className='bx bx-trash'></i>
                                             </button>
                                         </div>
@@ -196,8 +197,8 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                     ):(
                                         <div
                                             onClick={()=> fileInputRef.current?.click()} 
-                                            className="group mx-auto border-dashed border-2 py-10 flex justify-center mb-5 rounded hover:border-slate-800 hover:cursor-pointer">
-                                            <i className='bx bxs-image-add text-4xl text-slate-800 opacity-50 group-hover:opacity-100'></i>
+                                            className={`group mx-auto border-dashed border-2 py-10 flex justify-center mb-5 rounded ${loading ? '' : 'hover:border-slate-800 hover:cursor-pointer'}`}>
+                                            <i className={`bx bxs-image-add text-4xl text-slate-800 opacity-50 ${ loading ? '' : 'group-hover:opacity-100' }`}></i>
                                         </div>
                                     )
                             }
@@ -210,7 +211,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                     {...register('name', {
                                             required: 'El nombre es requerido',
                                     })}
-                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
+                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
                                     disabled={loading} 
                                 />
                                 {
@@ -228,7 +229,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                                         required: 'El url es requerido',
                                         validate: ( value ) => !value.includes('https://') || value.trim().includes(' ') ? 'La url no es válida' : undefined
                                     })}
-                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
+                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
                                     disabled={loading} 
                                 />
                                 {
@@ -239,6 +240,7 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
                             <input
                                 type="file"
                                 style={{ display: 'none' }}
+                                disabled={loading}
                                 ref={ fileInputRef }
                                 accept="image/png, image/jpg, image/jpeg, image/gif, image/webp"
                                 onChange={handleFileChange}

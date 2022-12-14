@@ -140,6 +140,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             name,
             url: url.trim(),
             category: categoryId,
+            img: imageEdit,
             active
         }
 
@@ -186,19 +187,19 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                 fileDataURL || imageEdit
                                     ? (
                                         <div className="relative group mb-5 flex justify-center w-52 h-52 shadow mx-auto">
-                                                <Image
-                                                    priority
-                                                    fill
-                                                    sizes="(max-width: 208px) 208px"
-                                                    src={ fileDataURL || imageEdit || profilePic}
-                                                    alt={'Nombre de pagina'}
-                                                    className='rounded-full cover p-3' 
-                                                />
+                                            <Image
+                                                priority
+                                                fill
+                                                sizes="(max-width: 208px) 208px"
+                                                src={ fileDataURL || imageEdit || profilePic}
+                                                alt={'Nombre de pagina'}
+                                                className='rounded-full cover p-3' 
+                                            />
                                             <button
                                                 onClick={deleteImage}
                                                 type="button"
                                                 disabled={loading} 
-                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block">
+                                                className="absolute -top-3 -right-3 shadow text-white bg-red-500 rounded-full w-8 h-8 hover:bg-red-600 active:scale-95 hover:shadow-2xl hidden group-hover:block disabled:opacity-0">
                                                 <i className='bx bx-trash'></i>
                                             </button>
                                         </div>
@@ -206,8 +207,8 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                     ):(
                                         <div
                                             onClick={()=> fileInputRef.current?.click()} 
-                                            className="group mx-auto border-dashed border-2 py-10 flex justify-center mb-5 rounded hover:border-slate-800 hover:cursor-pointer">
-                                            <i className='bx bxs-image-add text-4xl text-slate-800 opacity-50 group-hover:opacity-100'></i>
+                                            className={`group mx-auto border-dashed border-2 py-10 flex justify-center mb-5 rounded ${loading ? '' : 'hover:border-slate-800 hover:cursor-pointer'}`}>
+                                            <i className={`bx bxs-image-add text-4xl text-slate-800 opacity-50 ${ loading ? '' : 'group-hover:opacity-100' }`}></i>
                                         </div>
                                     )
                             }
@@ -220,7 +221,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                     {...register('name', {
                                             required: 'El nombre es requerido',
                                     })}
-                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
+                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.name ? 'outline-red-500 border-red-500' :'' }`}
                                     disabled={loading}
                                 />
                                 {
@@ -238,7 +239,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                         required: 'El url es requerido',
                                         validate: ( value ) => !value.includes('https://') || value.trim().includes(' ') ? 'La url no es válida' : undefined,
                                     })}
-                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
+                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.url ? 'outline-red-500 border-red-500' :'' }`}
                                     disabled={loading}
                                 />
                                 {
@@ -247,11 +248,17 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                 }
                             </div>
                             <div className="flex flex-col gap-1 w-full">
-                                <Checkbox value={ getValues('active')! } onCheckChange={toggleGroupActive} label={'Activo'} />
+                                <Checkbox 
+                                    value={ getValues('active')! } 
+                                    onCheckChange={toggleGroupActive} 
+                                    label={'Activo'}
+                                    disabled={loading}
+                                />
                             </div>
                             <input
                                 type="file"
                                 style={{ display: 'none' }}
+                                disabled={loading}
                                 ref={ fileInputRef }
                                 accept="image/png, image/jpg, image/jpeg, image/gif, image/webp"
                                 onChange={handleFileChange}

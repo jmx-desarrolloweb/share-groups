@@ -179,7 +179,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                 sizes="(max-width: 64px) 64px"
                                 src={page.img}
                                 alt={page.name}
-                                className='rounded-full shadow'
+                                className='rounded-full shadow cover'
                             />
                         ) : (
                             <div className="w-[64px] h-[64px] shadow bg-slate-200 rounded-full flex justify-center items-center">
@@ -193,7 +193,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                         rel="noreferrer" 
                         className="w-[64px] h-[64px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                 </div>
-                <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 text-xl font-bold hover:underline flex-1 ml-2 sm:flex-initial sm:ml-0">{ page.name }</a>
+                <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 sm:text-xl font-bold hover:underline flex-1 ml-2 sm:flex-initial sm:ml-0">{ page.name }</a>
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => setOpenGroups(!openGroups)}
@@ -272,7 +272,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                                         rel="noreferrer" 
                                                         className="w-[40px] h-[40px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                                                 </div>
-                                                <a href={ group.url }  target="_blank" rel="noreferrer" className="hover:underline">
+                                                <a href={ group.url }  target="_blank" rel="noreferrer" className="hover:underline text-sm sm:text-base">
                                                     {group.name}    
                                                 </a>
                                             </div>

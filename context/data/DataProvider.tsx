@@ -426,7 +426,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
     }
 
     const updateGroup = async ( group: IGroup ): Promise<{ hasError: boolean; message: string;}> => {
-        
+                
+
         try {
             
             const { data } = await axios.put('/api/dashboard/groups', group)

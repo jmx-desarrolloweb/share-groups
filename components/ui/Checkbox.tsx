@@ -4,9 +4,10 @@ interface Props{
     value: boolean
     onCheckChange: () => void
     label?: string
+    disabled?: boolean
 }
 
-export const Checkbox:FC<Props> = ( {value, onCheckChange, label} ) => {
+export const Checkbox:FC<Props> = ( {value, onCheckChange, label, disabled} ) => {
 
 
     return (
@@ -17,11 +18,12 @@ export const Checkbox:FC<Props> = ( {value, onCheckChange, label} ) => {
                 )
             }
             <div className={`p-1 rounded-lg flex items-center ${ label ? ' py-2 px-3 border' : '' }`}>
-                <label htmlFor="default-toggle" className="inline-flex relative items-center cursor-pointer">
+                <label htmlFor="default-toggle" className={`inline-flex relative items-center ${ disabled ? 'cursor-default opacity-60' : 'cursor-pointer' }`}>
                     <input
                         type="checkbox"
                         id="default-toggle"
                         checked={value}
+                        disabled={disabled}
                         onChange={onCheckChange}
                         className="sr-only peer"
                     />
