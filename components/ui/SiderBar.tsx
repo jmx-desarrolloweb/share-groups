@@ -132,7 +132,7 @@ export const SiderBar = () => {
                     categories.map( category => (
                         <li key={category._id}>
                             <button 
-                                className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-blue-100 hover:text-sky-800 mb-1 ${ query.slug === `${category.slug}` ? 'bg-blue-100 text-sky-800' : 'border-transparent'}`}
+                                className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-blue-100 hover:text-sky-800 mb-1 text-left ${ query.slug === `${category.slug}` ? 'bg-blue-100 text-sky-800' : 'border-transparent'}`}
                                 onClick={ ()=> navigateTo(`/dashboard/${category.slug}`) }>
                                 { category.name }
                             </button>

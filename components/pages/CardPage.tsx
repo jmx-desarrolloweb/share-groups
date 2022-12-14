@@ -193,7 +193,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                         rel="noreferrer" 
                         className="w-[64px] h-[64px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                 </div>
-                <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 text-xl font-bold hover:underline">{ page.name }</a>
+                <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 text-xl font-bold hover:underline flex-1 ml-2 sm:flex-initial sm:ml-0">{ page.name }</a>
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => setOpenGroups(!openGroups)}
