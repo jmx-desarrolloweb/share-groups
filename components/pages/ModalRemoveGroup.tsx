@@ -31,8 +31,9 @@ export const ModalRemoveGroup:FC<Props> = ({ toShow, processing = false, titlePa
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
                     <div className="fixed inset-0 z-10 overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                            <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+                            <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all my-8 w-full sm:max-w-lg">
+                                
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div className="sm:flex sm:items-start">
                                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -50,16 +51,16 @@ export const ModalRemoveGroup:FC<Props> = ({ toShow, processing = false, titlePa
                                     <div className="mt-5">
                                         <div className={`pl-10 pr-10 my-1 py-2 justify-between items-center even:bg-gray-100 opacity-100 flex border-b border-t`}>
                                             <div className="flex items-center gap-2">
-                                                <div className="relative">
+                                                <div className="relative w-[40px] h-[40px]">
                                                     {group.img
                                                         ? (
                                                             <NextImage
                                                                 priority
-                                                                width={40}
-                                                                height={40}
+                                                                fill
+                                                                sizes="(max-width: 40px) 40px"
                                                                 src={group.img}
                                                                 alt={group.name}
-                                                                className='rounded-full shadow'
+                                                                className='rounded-full shadow cover'
                                                             />
                                                         ) : (
                                                             <div className="w-[40px] h-[40px] shadow bg-slate-200 rounded-full flex justify-center items-center">

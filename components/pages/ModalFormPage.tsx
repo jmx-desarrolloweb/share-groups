@@ -160,10 +160,10 @@ export const ModalFormPage: FC<Props> = ({ pageEdit, categoryId, setShowForm }) 
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
             <div className="fixed inset-0 z-10 overflow-y-auto">
-                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
                     <form
                         onSubmit={ handleSubmit(onPageSubmit) }
-                        className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+                        className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all my-8 w-full sm:max-w-lg"
                     >
                         <div className="bg-white px-4 pt-5 pb-4 sm:px-6 sm:pt-2 sm:pb-4">
                             <header className="flex justify-center py-3 border-b mb-8">

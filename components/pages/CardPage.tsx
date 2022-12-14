@@ -109,14 +109,17 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
 
         setLoadingUpdatingPage(true)
 
-        page.groups?.push(newGroup)
-        const { hasError } = await updatePage(page)
+        const { hasError } = await updatePage({ 
+            ...page, 
+            groups: [...page.groups!, newGroup] 
+        })
 
         setLoadingUpdatingPage(false)
 
         if( hasError ){ return }
 
         handleHiddenModalListGroup()
+        setOpenGroups(true)
 
     }
 

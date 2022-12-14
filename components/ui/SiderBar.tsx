@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form"
 
 import { useData } from '../../hooks/useData'
 import { useAuth } from '../../hooks/useAuth';
+import { useUI } from '../../hooks/useUI';
 
 interface FormData {
     name: string
@@ -26,16 +27,21 @@ export const SiderBar = () => {
     const router = useRouter()
     const { query } = router
 
-    const { categories, addNewCategory } = useData()
     const { logout } = useAuth()
+    const { categories, addNewCategory } = useData()
+    const { toggleSideMenu } = useUI()
 
+
+    const navigateTo = (url: string) => {
+        router.push(url)
+        toggleSideMenu()
+    }
 
     const onShowForm = () => {
         setShowForm(true)
         setTimeout(() => {
             setFocus("name", { shouldSelect: true })
         }, 100);
-            
     }
 
     const cancelForm = () => {
@@ -56,17 +62,13 @@ export const SiderBar = () => {
         
         cancelForm()
         setLoading(false)
+        toggleSideMenu()
     }
+
 
     return (
         <div className="h-screen sticky top-0 bg-white w-72 px-5 pt-5 shadow">
-            <div className='flex justify-between items-center py-5 mb-5'>
-                <div></div>
-                <NextLink 
-                    href={'/'}
-                    className="font-bold text-center text-blue-800 uppercase flex justify-center items-center gap-1">
-                    <i className='bx bxs-layer text-lg'></i> Share Groups
-                </NextLink>
+            <div className='flex justify-between items-center pb-5 mb-5'>
                 <div 
                     className='relative'
                 >
@@ -78,7 +80,7 @@ export const SiderBar = () => {
                     </button>
                     {
                         showOptions &&
-                        <div className="origin-top-right absolute right-2 mt-0 w-40 rounded-sm shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex justify-center hover:bg-gray-100" role="menu">
+                        <div className="origin-top-right absolute left-2 mt-0 w-40 rounded-sm shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex justify-center hover:bg-gray-100" role="menu">
                             <button
                                 onClick={ logout } 
                                 className="text-gray-700 flex items-center justify-center text-sm gap-1 px-2 py-2 hover:text-gray-900">
@@ -88,6 +90,18 @@ export const SiderBar = () => {
                         </div>
                     }
                 </div>
+                <button 
+                    onClick={ ()=> navigateTo('/') }
+                    className="font-bold text-center text-blue-800 uppercase flex justify-center items-center gap-1">
+                    <i className='bx bxs-layer text-lg'></i> Share Groups
+                </button>
+                <button
+                    onClick={ ()=> toggleSideMenu() } 
+                    className='text-2xl px-1 mt-1 rounded text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 hover:shadow-lg active:scale-95 block sm:hidden'
+                >
+                    <i className='bx bx-x'></i>
+                </button>
+                <div className='hidden sm:block'></div>
             </div>
             {
                 !showForm
@@ -117,11 +131,11 @@ export const SiderBar = () => {
                 { categories.length > 0 &&
                     categories.map( category => (
                         <li key={category._id}>
-                            <NextLink 
+                            <button 
                                 className={`inline-block w-full py-3 px-3 rounded-md font-semibold hover:bg-blue-100 hover:text-sky-800 mb-1 ${ query.slug === `${category.slug}` ? 'bg-blue-100 text-sky-800' : 'border-transparent'}`}
-                                href={`/dashboard/${category.slug}`}>
+                                onClick={ ()=> navigateTo(`/dashboard/${category.slug}`) }>
                                 { category.name }
-                            </NextLink>
+                            </button>
                         </li>
                     ))
                 }

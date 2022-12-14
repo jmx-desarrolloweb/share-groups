@@ -7,6 +7,8 @@ import { useData } from '../../hooks/useData'
 import { ModalDelete, NavBar } from '../ui'
 
 import { ICategory } from '../../interfaces'
+import { useEffect } from 'react';
+import { useUI } from '../../hooks/useUI';
 
 
 interface FormData {
@@ -30,8 +32,7 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
     const router = useRouter()
     const { asPath } = router
 
-    const { updateCategory, deleteCategory } = useData()
-    
+    const { updateCategory, deleteCategory } = useData()   
 
     const { register, handleSubmit, formState:{ errors }, setValue, setFocus,  } = useForm<FormData>()
 

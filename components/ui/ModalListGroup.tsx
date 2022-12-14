@@ -63,8 +63,8 @@ export const ModalListGroup:FC<Props> = ({ idCategory, pageName, processing=fals
             <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
                     <div className="fixed inset-0 z-10 overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                            <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+                            <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-lg">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 z-20 shadow">
                                     <div className="sm:flex sm:items-start">
                                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -90,14 +90,14 @@ export const ModalListGroup:FC<Props> = ({ idCategory, pageName, processing=fals
                                                 {
                                                     groupsOfCategory.length === 0 
                                                     ? (
-                                                        <div className='px-5 py-10 flex gap-5 justify-center flex-col items-center'>
-                                                            <span className='text-5xl text-gray-300'>
-                                                                <i className='bx bx-collection'></i>
+                                                        <div className='px-5 py-16 flex justify-center flex-col items-center'>
+                                                            <span className='text-4xl text-gray-300'>
+                                                                <i className='bx bxs-layer'></i>
                                                             </span>
-                                                            <p className='text-xl font-bold text-gray-300'>No hay grupos para agregar</p>
+                                                            <p className='text-lg font-bold text-gray-300'>No hay grupos para añadir</p>
                                                         </div>
                                                     ):(
-                                                        <ul className='max-h-[500px] overflow-y-auto custom-scroll py-3'>
+                                                        <ul className='max-h-[320px] sm:max-h-[500px] overflow-y-auto custom-scroll py-3'>
                                                             {
                                                                 groupsOfCategory.map( group => {
                                                                     return (
@@ -166,7 +166,7 @@ export const ModalListGroup:FC<Props> = ({ idCategory, pageName, processing=fals
                                                             </path>
                                                         </svg>
                                                     )
-                                                    : 'Agregar'
+                                                    : 'Añadir'
                                             }
                                     </button>
                                     <button

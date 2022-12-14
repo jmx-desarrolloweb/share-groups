@@ -52,11 +52,11 @@ const IniciarSesionPage = () => {
                 <div className="relative flex justify-center items-center w-full h-full">
                     <form 
                         onSubmit={ handleSubmit( onLoginSubmit ) }
-                        className="relative sm:w-1/2 max-w-[500px] py-14 px-10 bg-white/50 border-2 border-white/70 rounded-2xl shadow-md backdrop-blur-md"
+                        className="relative flex flex-col justify-center sm:py-14 sm:w-1/2 max-w-[500px] h-full sm:h-auto px-10 bg-white/20 sm:bg-white/50 border-2 border-white/70 sm:rounded-2xl shadow-md backdrop-blur-md"
                     >
                         <header className="mb-7">
                             <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Share</span> Groups</h1>
-                            <p className="text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p>
+                            <p className="text-slate-700 sm:text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p>
                         </header>
                         <div className="flex flex-col mb-5">
                             <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Usuario</label>
