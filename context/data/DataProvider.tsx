@@ -59,7 +59,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     // ============ ============ Categories ============ ============
 
-    const refreshCategories = async():Promise<{ hasError:boolean; message: string }> => {
+    const refreshCategories = async():Promise<{ hasError:boolean; categoriesResp: ICategory[] }> => {
 
         try {
             const { data } = await axios.get('/api/dashboard/categories')
@@ -67,7 +67,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
             return {
                 hasError: false,
-                message: 'Listas cargadas correctamente',
+                categoriesResp: data,
             }
         } catch (error) {
         
@@ -76,14 +76,14 @@ export const DataProvider: FC<Props> = ({ children }) => {
                 notifyError(message)
                 return {
                     hasError: true,
-                    message: message
+                    categoriesResp: []
                 }
             }
 
             notifyError('Hubo un error inesperado')
             return {
                 hasError: true,
-                message: 'Hubo un error inesperado, comuniquese con soporte',
+                categoriesResp: [],
             }
         }
     }
@@ -553,6 +553,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
             ...state,
             updating,
             // Categories
+            refreshCategories,
             addNewCategory,
             updateCategory,
             setUpdating,

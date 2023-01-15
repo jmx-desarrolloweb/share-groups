@@ -52,7 +52,7 @@ const getCategories = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
 
     try {
         await db.connect()
-        const categories = await Category.find({ user: payload._id }).lean()
+        const categories = await Category.find({ user: payload._id }).sort({ createdAt: 'desc' }).lean()
         await db.disconnect()
         
         return res.status(200).json(categories)

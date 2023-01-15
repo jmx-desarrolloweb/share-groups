@@ -10,6 +10,7 @@ interface ContextProps {
 
 
     // Methods
+    refreshCategories: () => Promise<{ hasError: boolean; categoriesResp: ICategory[]}>
     addNewCategory: ( name: string ) => Promise<{ hasError:boolean; message: string; }>
     updateCategory: ( category: ICategory ) => Promise<{ hasError: boolean; message: string; }>
     setUpdating   : Dispatch<SetStateAction<boolean>>

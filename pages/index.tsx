@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAuth } from '../hooks/useAuth';
 import { IUser } from '../interfaces';
+import { useData } from '../hooks/useData';
 
 const IniciarSesionPage = () => {
 
@@ -16,6 +17,7 @@ const IniciarSesionPage = () => {
 
     const { register, handleSubmit, formState:{ errors } } = useForm<IUser>()    
     const { loginUser } = useAuth()
+    const { refreshCategories } =useData()
 
 
     const onLoginSubmit = async( data:IUser ) => {
@@ -32,8 +34,15 @@ const IniciarSesionPage = () => {
             }, 3000);
             return
         }
+        
+        const { categoriesResp } = await refreshCategories()
+        
+        if( categoriesResp.length === 0 ){
+            router.replace('/dashboard')
+        }else {
+            router.replace(`/dashboard/${categoriesResp[0].slug}`)
+        }
 
-        router.replace('/dashboard')
     }
 
     return (

@@ -36,7 +36,7 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
         case '[Data] - Add New Category':
             return {
                 ...state,
-                categories: [ ...state.categories, action.payload ]
+                categories: [ action.payload, ...state.categories ]
             }
 
         case '[Data] - Update Category':

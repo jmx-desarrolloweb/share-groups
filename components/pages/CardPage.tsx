@@ -194,16 +194,9 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                         className="w-[64px] h-[64px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
                 </div>
                 <a href={ page.url } target="_blank" rel="noreferrer" className="text-slate-800 sm:text-xl font-bold hover:underline flex-1 ml-2 sm:flex-initial sm:ml-0">{ page.name }</a>
-                <div className="flex items-center gap-1">
-                    <button
-                        onClick={() => setOpenGroups(!openGroups)}
-                        disabled={page.groups!.length === 0}
-                        className={`text-2xl p-2 hover:bg-slate-100 rounded ${page.groups!.length > 0 ? 'opacity-100' : 'opacity-10'}`}
-                    >
-                        <i className={`bx bx-chevron-down transition-all ${openGroups && page.groups!.length > 0 ? 'rotate-180' : ''}`}></i>
-                    </button>
+                <div className="flex items-center">
                     <div className='group relative' >
-                        <button className='hover:bg-slate-100 rounded active:scale-95 p-1'>
+                        <button className='hover:bg-slate-100 rounded active:scale-95 p-2'>
                             <i className='bx bx-dots-horizontal-rounded text-slate-800'></i>
                         </button>
                         <div 
@@ -216,12 +209,6 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                     className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
                                     <i className='bx bx-plus text-emerald-600 text-xl'></i>
                                     <span>Añadir grupo</span>
-                                </button>
-                                <button
-                                    onClick={ openAll } 
-                                    className="w-full text-left text-gray-700 flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900">
-                                    <i className='bx bx-paperclip text-slate-600 text-xl'></i>
-                                    <span>Abrir enlaces</span>
                                 </button>
                                 <button
                                     onClick={ () => setShowFormEdit(true) } 
@@ -238,6 +225,18 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                             </div>
                         </div>
                     </div>
+                    <button
+                        onClick={() => setOpenGroups(!openGroups)}
+                        disabled={page.groups!.length === 0}
+                        className={`text-2xl p-1 hover:bg-slate-100 rounded ${page.groups!.length > 0 ? 'opacity-100' : 'opacity-10'}`}
+                    >
+                        <i className={`bx bx-chevron-down transition-all ${openGroups && page.groups!.length > 0 ? 'rotate-180' : ''}`}></i>
+                    </button>
+                    <button
+                        onClick={ openAll } 
+                        className="hover:text-gray-900 hover:bg-slate-100 rounded active:scale-95 p-2">
+                        <i className='bx bx-link-external text-slate-600'></i>
+                    </button>
                 </div>
             </header>
             <div>
@@ -270,9 +269,15 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                                         href={group.url}
                                                         target="_blank" 
                                                         rel="noreferrer" 
-                                                        className="w-[40px] h-[40px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"></a>
+                                                        className="w-[40px] h-[40px] bg-white absolute top-0 left-0 right-0 bottom-0 rounded-full cursor-pointer block opacity-0 hover:opacity-30"
+                                                    ></a>
                                                 </div>
-                                                <a href={ group.url }  target="_blank" rel="noreferrer" className="hover:underline text-sm sm:text-base">
+                                                <a 
+                                                    href={ group.url }  
+                                                    target="_blank" 
+                                                    rel="noreferrer" 
+                                                    className="hover:underline text-sm sm:text-base"
+                                                >
                                                     {group.name}    
                                                 </a>
                                             </div>
@@ -287,9 +292,9 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                                     href={group.url}
                                                     target="_blank" 
                                                     rel="noreferrer" 
-                                                    className='text-blue-800 hover:text-blue-600'
+                                                    className='text-gray-600 hover:text-blue-600'
                                                 >
-                                                    <i className='bx bx-share text-xl scale-x-[-1]'></i>
+                                                    <i className='bx bx-link-alt text-xl'></i>
                                                 </a>
                                             </div>
                                         </div>
