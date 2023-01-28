@@ -3,10 +3,11 @@ import { FC, useState } from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-import { ModalConfirm } from './ModalConfirm'
-import { ICategory } from '../../interfaces'
 import { useData } from '../../hooks/useData'
 import { useUI } from '../../hooks/useUI'
+import { ModalConfirm } from './ModalConfirm'
+
+import { ICategory } from '../../interfaces'
 
 interface Props {
     category: ICategory
@@ -79,7 +80,7 @@ export const NavBar:FC<Props> = ({ category }) => {
             setLoadingResetAll(true)
         }
 
-        const { hasError } = await resetGroupsOfPages( category._id!, random )
+        await resetGroupsOfPages( category._id!, random )
         
         if(random){
             setLoadingReset(false)
@@ -87,9 +88,6 @@ export const NavBar:FC<Props> = ({ category }) => {
             setLoadingResetAll(false)
         }
 
-        if(hasError){ return }
-        
-        handleHiddenModal()
     }
 
         

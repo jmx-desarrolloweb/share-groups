@@ -519,7 +519,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
             const newArray = state.pages.filter( page => page.category !== idCategory ) 
             dispatch({ type: '[Data] - Reset Groups Of Pages', payload: [ ...newArray, ...data ] })
-
+            
+            notifySuccess('Grupos reasignados')
             return {
                 hasError: false,
                 pagesResp: data,
