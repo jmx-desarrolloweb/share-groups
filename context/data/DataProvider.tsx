@@ -548,6 +548,41 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    const toggleActiveGroups = async( idCategory:string, activate = true ):Promise<{ hasError:boolean }> => {
+        try {
+            await axios.post('/api/dashboard/toggle-active-groups', { idCategory, activate })
+            dispatch({ type: '[Data] - Toggle Active Groups', payload: { idCategory, activate } })
+
+            if( activate ){
+                notifySuccess('Grupos activados')
+            }else {
+                notifySuccess('Grupos desactivados')
+            }
+
+            return {
+                hasError: false
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                notifyError(message)
+
+                return {
+                    hasError: true
+                }
+            }
+
+            setUpdating(false)
+            notifyError('Hubo un error inesperado')
+
+            return {
+                hasError: true
+            }
+        }
+    }
+
 
     return (
         <DataContext.Provider value={{
@@ -574,6 +609,9 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
             // reset
             resetGroupsOfPages,
+
+            // toggle groups
+            toggleActiveGroups,
       
         }}>
             {children}

@@ -30,6 +30,10 @@ interface ContextProps {
         hasError: boolean;
         pagesResp: IPage[];
     }>
+
+    toggleActiveGroups: (idCategory: string, activate?: boolean) => Promise<{
+        hasError: boolean;
+    }>
 }
 
 
