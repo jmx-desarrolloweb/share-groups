@@ -164,7 +164,7 @@ export const LayoutCategory:FC<Props> = ({ children, category }) => {
                         <button
                             onClick={ onShowForm }
                             className="items-center text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-500 font-bold text-sm py-2 px-2 rounded-md hidden group-hover:flex">
-                               <i className='bx bx-edit-alt' ></i>
+                            <i className='bx bx-edit-alt' ></i>
                         </button>
                     </div>
                 </div>

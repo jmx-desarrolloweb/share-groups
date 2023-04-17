@@ -22,6 +22,8 @@ type DataActionType =
 
     | { type: '[Data] - Reset Groups Of Pages', payload: IPage[] }
 
+    | { type: '[Data] - Toggle Active Groups', payload: { idCategory:string, activate: boolean }  }
+
 
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {
 
@@ -107,7 +109,12 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 pages: [ ...action.payload ]
             }
 
-            
+        case '[Data] - Toggle Active Groups':
+            return {
+                ...state,
+                groups: state.groups.map( group => group.category === action.payload.idCategory ? ({ ...group, active: action.payload.activate }) : group )
+            }
+
         default:
             return state
     }
