@@ -551,7 +551,6 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
     const addNewSection = async( section: ISection  ):Promise<{ hasError: boolean, message: string }> => {
 
-
         try {
 
             const { data } = await axios.post('/api/dashboard/sections', section)
@@ -579,6 +578,80 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
             notifyError('Hubo un error inesperado')
             setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+    }
+
+
+    const updateSection = async( section: ISection  ):Promise<{ hasError: boolean, message: string }> => {
+        try {
+
+            const { data } = await axios.put('/api/dashboard/sections', section)
+            dispatch({ type:'[Data] - Update Section', payload: data })
+
+            notifySuccess('Sección actualizada')
+            return {
+                hasError: false,
+                message: ''
+            }
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                notifyError(message)
+
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            notifyError('Hubo un error inesperado')
+
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+    }
+
+    const deleteSection = async( sectionId:string ): Promise<{ hasError: boolean; message: string;}>  => {
+
+        try {
+            
+            const { data } = await axios.delete('/api/dashboard/sections', {
+                data: {
+                    _id: sectionId
+                }
+            })
+
+            dispatch({ type: '[Data] - Delete Section', payload: data.message })
+            notifySuccess('Sección eliminada')
+
+            return {
+                hasError: false,
+                message: ''
+            }
+        } catch (error) {
+            
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                setUpdating(false)
+                notifyError(message)
+
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            setUpdating(false)
+            notifyError('Hubo un error inesperado')
+
             return {
                 hasError: true,
                 message: 'Hubo un error inesperado, comuniquese con soporte',
@@ -672,6 +745,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
         <DataContext.Provider value={{
             ...state,
             updating,
+            
             // Categories
             refreshCategories,
             addNewCategory,
@@ -694,6 +768,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
             // Sections
             refreshSections,
             addNewSection,
+            updateSection,
+            deleteSection,
 
             // reset
             resetGroupsOfPages,

@@ -135,13 +135,105 @@ const addNewSection = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
 
 
 const updateSection = async( req: NextApiRequest, res: NextApiResponse<Data> ) => {
-    // TODO:
-    return res.status(200).json({ message: 'Legando al endpoint updateSection' })
+
+    const { _id='' } = req.body
+
+    if(!isValidObjectId(_id)){
+        return res.status(400).json({ message: 'El ID del grupo NO es valido' })
+    }
+
+    try {
+        
+        await db.connect()
+
+        const sectionUpdate = await Section.findById(_id)
+        if( !sectionUpdate ){
+            await db.disconnect()
+            return res.status(400).json({ message: 'Sección no encontrado' })
+        }
+
+        const actualCategory = await Category.findById( sectionUpdate.category )
+        if(!actualCategory){
+            await db.disconnect()
+            return res.status(400).json({ message: 'Categoría de sección no encontrada' })
+        }
+
+        const isUserValid = await verifyUser( req, actualCategory.user )
+
+        if(!isUserValid){
+            await db.disconnect()
+            return res.status(401).json({ message: 'Not authorized' }) 
+        }
+
+        const {
+            title = sectionUpdate.title,
+            active = sectionUpdate.active
+        } = req.body
+
+        sectionUpdate.title = title
+        sectionUpdate.active = active
+
+        await sectionUpdate.save()
+        await db.disconnect()
+
+        return res.status(200).json({
+            ...JSON.parse( JSON.stringify( sectionUpdate )),
+            category: actualCategory,
+        })
+
+    } catch (error) {
+        await db.disconnect()
+        console.log(error)
+        return res.status(500).json({ message: 'Algo salio mal, revisar la consola del servidor' })
+
+    }
+
 }
 
+
+
 const deleteSection = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-// TODO:
-return res.status(200).json({ message: 'Legando al endpoint deleteGroup' })
+
+    const { _id='' } = req.body
+    
+    if(!isValidObjectId(_id)){
+        return res.status(400).json({ message: 'El ID del grupo NO es valido' })
+    }
+
+    try {
+     
+        await db.connect()
+        
+        const section = await Section.findById( _id )
+        if( !section ){
+            await db.disconnect()
+            return res.status(400).json({ message: 'Sección no encontrada' })
+        }
+
+        const actualCategory = await Category.findById( section.category )
+        if(!actualCategory){
+            await db.disconnect()
+            return res.status(400).json({ message: ' Categoría de la sección no encontrada' })
+        }
+
+        const isUserValid = await verifyUser(req, actualCategory.user)
+
+        if(!isUserValid){
+            await db.disconnect()
+            return res.status(401).json({ message: 'Not authorized' }) 
+        }
+
+        await section.deleteOne()
+        await db.disconnect()
+
+        return res.status(200).json({ message: _id })
+        
+    } catch (error) {
+        await db.disconnect()
+        console.log(error)
+        return res.status(500).json({ message: 'Algo salio mal, revisar la consola del servidor' })
+    }
+
 }
 
 

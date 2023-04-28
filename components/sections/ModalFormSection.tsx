@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import { ICategory, ISection } from "../../interfaces"
-import { Dispatch, FC, SetStateAction, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { Checkbox } from "../ui"
 import { useData } from "../../hooks/useData"
 
@@ -15,6 +15,8 @@ export const ModalFormSection: FC<Props> = ({ sectionEdit, category, setShowForm
 
     const [loading, setLoading] = useState(false)
 
+    const { addNewSection, updateSection } = useData()
+
     const { register, handleSubmit, formState: { errors }, reset, getValues, setValue } = useForm<ISection>({
         defaultValues: {
             title: '',
@@ -22,7 +24,15 @@ export const ModalFormSection: FC<Props> = ({ sectionEdit, category, setShowForm
         }
     })
 
-    const { addNewSection } = useData()
+    useEffect(()=> {
+        if(sectionEdit){
+            reset({
+                title: sectionEdit.title,
+                active: sectionEdit.active
+            })
+        }
+    },[sectionEdit])
+    
 
     const toggleSectionActive = () => {
         setValue('active', !getValues('active') ,{ shouldValidate: true })
@@ -43,7 +53,11 @@ export const ModalFormSection: FC<Props> = ({ sectionEdit, category, setShowForm
         }
 
         if( sectionEdit ){
-            // TODO:Editar
+
+            newSection._id = sectionEdit._id
+            await updateSection( newSection )
+            onCancel()
+            
         }else {
             await addNewSection( newSection )
             onCancel()

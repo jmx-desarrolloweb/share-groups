@@ -29,6 +29,8 @@ interface ContextProps {
 
     refreshSections: (category: string) => Promise<{ hasError: boolean; sectionsResp: ISection[]; }>
     addNewSection  : (section: ISection) => Promise<{ hasError: boolean; message: string; }>
+    updateSection  : (section: ISection) => Promise<{ hasError: boolean; message: string; }>
+    deleteSection  : ( sectionId: string ) => Promise<{ hasError: boolean; message: string; }>
 
     resetGroupsOfPages: (idCategory: string, random?:boolean) => Promise<{
         hasError: boolean;

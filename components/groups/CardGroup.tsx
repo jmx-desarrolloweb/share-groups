@@ -146,7 +146,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                 toShow={showDeleteModal} 
                 processing={loadingDelete}
                 title={'Eliminar grupo'} 
-                subtitle={`¿ Desde eliminar el grupo "${ group.name }" ?`} 
+                subtitle={`¿ Desea eliminar el grupo "${ group.name }" ?`} 
                 onResult={onDelete}
             />
             {

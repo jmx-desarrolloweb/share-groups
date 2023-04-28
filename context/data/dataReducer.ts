@@ -22,14 +22,15 @@ type DataActionType =
 
     | { type: '[Data] - Load Sections', payload: ISection[] }
     | { type: '[Data] - Add New Section', payload: ISection }
-
+    | { type: '[Data] - Update Section', payload: ISection }
+    | { type: '[Data] - Delete Section', payload: string }
 
     | { type: '[Data] - Reset Groups Of Pages', payload: IPage[] }
 
     | { type: '[Data] - Toggle Active Groups', payload: { idCategory:string, activate: boolean }  }
 
 
-export const dataReducer = (state: DataState, action: DataActionType): DataState => {
+export const dataReducer = (state: DataState, action: DataActionType): DataState => {    
 
     switch (action.type) {
         
@@ -106,7 +107,7 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 groups: state.groups.filter( group => group._id !== action.payload )
             }
 
-        // Sections TODO:
+        // Sections
         case '[Data] - Load Sections':
             return {
                 ...state,
@@ -117,6 +118,18 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 sections: [...state.sections, action.payload]
+            }
+
+        case '[Data] - Update Section':
+            return {
+                ...state,
+                sections: state.sections.map( section => section._id === action.payload._id ? action.payload : section )
+            }
+
+        case '[Data] - Delete Section':
+            return {
+                ...state,
+                sections: state.sections.filter( section => section._id !== action.payload)
             }
 
         // Reset groups
