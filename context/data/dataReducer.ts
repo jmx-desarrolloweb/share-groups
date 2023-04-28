@@ -1,7 +1,7 @@
 
 
 import { DataState } from './';
-import { ICategory, IGroup, IPage } from '../../interfaces';
+import { ICategory, IGroup, IPage, ISection } from '../../interfaces';
 
 
 type DataActionType =
@@ -19,6 +19,10 @@ type DataActionType =
     | { type: '[Data] - Add New Group', payload: IGroup }
     | { type: '[Data] - Update Group', payload: IGroup }
     | { type: '[Data] - Delete Group', payload: string }
+
+    | { type: '[Data] - Load Sections', payload: ISection[] }
+    | { type: '[Data] - Add New Section', payload: ISection }
+
 
     | { type: '[Data] - Reset Groups Of Pages', payload: IPage[] }
 
@@ -100,6 +104,19 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 groups: state.groups.filter( group => group._id !== action.payload )
+            }
+
+        // Sections TODO:
+        case '[Data] - Load Sections':
+            return {
+                ...state,
+                sections: [ ...state.sections, ...action.payload ]
+            }
+
+        case '[Data] - Add New Section':
+            return {
+                ...state,
+                sections: [...state.sections, action.payload]
             }
 
         // Reset groups

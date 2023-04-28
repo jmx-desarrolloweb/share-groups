@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import { DataContext, dataReducer } from './';
 
-import { ICategory, IGroup, IPage } from '../../interfaces';
+import { ICategory, IGroup, IPage, ISection } from '../../interfaces';
 import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/router';
 
@@ -19,12 +19,14 @@ export interface DataState {
     categories: ICategory[];
     pages: IPage[];
     groups: IGroup[];
+    sections: ISection[]
 }
 
 const DATA_INITIAL_STATE: DataState = {
     categories: [],
     pages: [],
     groups: [],
+    sections: [],
 }
 
 
@@ -504,6 +506,88 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    // ============ ============ TODO: Section ============ ============
+
+    const refreshSections = async(category: string):Promise<{ hasError:boolean; sectionsResp: ISection[] }> => {
+
+        try {
+
+            const { data } = await axios.get<ISection[]>('/api/dashboard/sections', { params: { category } })
+            
+            if(data.length === 0){
+                return {
+                    hasError: false,
+                    sectionsResp: [],
+                }
+            }
+
+            dispatch({ type: '[Data] - Load Sections', payload: data })
+
+            return {
+                hasError: false,
+                sectionsResp: data,
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+                notifyError(message)
+                setUpdating(false)
+
+                return {
+                    hasError: true,
+                    sectionsResp: []
+                }
+            }
+
+            notifyError('Hubo un error inesperado')
+            setUpdating(false)
+            return {
+                hasError: true,
+                sectionsResp: [],
+            }
+        }
+    } 
+
+    const addNewSection = async( section: ISection  ):Promise<{ hasError: boolean, message: string }> => {
+
+
+        try {
+
+            const { data } = await axios.post('/api/dashboard/sections', section)
+
+            dispatch({ type:'[Data] - Add New Section', payload: data })
+
+            notifySuccess('Section agregada')
+            return {
+                hasError: false,
+                message: ''
+            }
+
+        } catch (error) {
+            
+            if(axios.isAxiosError(error)){
+                const { message } = error.response?.data as {message : string}
+
+                notifyError(message)
+                setUpdating(false)
+                return {
+                    hasError: true,
+                    message: message
+                }
+            }
+
+            notifyError('Hubo un error inesperado')
+            setUpdating(false)
+            return {
+                hasError: true,
+                message: 'Hubo un error inesperado, comuniquese con soporte',
+            }
+        }
+    }
+
+
+
     // ============ ============ Reset ============ ============
 
     const resetGroupsOfPages = async( idCategory:string, random = true ):Promise<{ hasError:boolean; pagesResp: IPage[] }> => {
@@ -606,6 +690,10 @@ export const DataProvider: FC<Props> = ({ children }) => {
             addNewGroup,
             updateGroup,
             deleteGroup,
+
+            // Sections
+            refreshSections,
+            addNewSection,
 
             // reset
             resetGroupsOfPages,
