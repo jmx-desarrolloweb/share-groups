@@ -8,6 +8,7 @@ const groupSchema = new Schema({
     slug    : { type: String },
     img     : { type: String },
 
+    section: { type: mongoose.Types.ObjectId,  ref: 'Section', },
     category: { type: mongoose.Types.ObjectId,  ref: 'Category', },
 
     active  : { type: Boolean, default: true }

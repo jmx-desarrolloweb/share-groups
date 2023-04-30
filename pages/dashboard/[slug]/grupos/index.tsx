@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { useData } from '../../../../hooks/useData'
 import { LayoutApp, LayoutCategory } from '../../../../components/layouts'
 
-import { ICategory, IGroup } from '../../../../interfaces'
+import { ICategory, IGroup, ISection } from '../../../../interfaces'
 import { ListGroup, ModalFormGroup } from '../../../../components/groups'
 
 const GruposPage = () => {
@@ -16,10 +16,12 @@ const GruposPage = () => {
     const [loadingGroups, setLoadingGroups] = useState(false)
     const [loadingToggleGroups, setLoadingToggleGroups] = useState(false)
 
+    const [sectionsOfCategory, setSectionsOfCategory] = useState<ISection[]>([])
+
     const router = useRouter()
     const { query } = router
     
-    const { categories, updating, groups, refreshGroups, toggleActiveGroups } =  useData()
+    const { categories, updating, groups, refreshGroups, toggleActiveGroups, /*  */ sections, refreshSections } =  useData()
 
     useEffect(()=> {
 
@@ -40,6 +42,36 @@ const GruposPage = () => {
         }
         
     },[query, categories])
+
+
+        // TODO: CArgar categorias con los grupos a la vez
+    const loadSections = async() => {
+
+        if(!category?._id){ return }
+        setLoadingGroups( true )
+
+        const { hasError, sectionsResp } = await refreshSections( category._id )
+        
+        if( !hasError ){
+            setSectionsOfCategory( sectionsResp )
+        }
+
+        setLoadingGroups( false )
+    }
+
+    useEffect(()=> {
+        setLoadingGroups(true)
+        const sectionsByCategory = sections.filter( section => section.category?._id === category?._id )
+        
+        if(sectionsByCategory.length === 0){
+            loadSections()
+            return
+        }
+        setSectionsOfCategory(sectionsByCategory)
+        setLoadingGroups(false)
+
+    },[category?._id, sections])
+
 
 
     const loadGroups = async() => {
@@ -70,6 +102,19 @@ const GruposPage = () => {
         setLoadingGroups(false)
         
     },[category?._id, groups])
+
+
+    
+    const sectionsWithGroups = useMemo( ()=> {
+        return sectionsOfCategory.map( section => {
+            const newSection = {
+                ...section,
+                groups: groupsOfCategory.filter( group => group.section?._id === section._id )
+            }            
+            return newSection
+        })
+    }, [ sectionsOfCategory, groupsOfCategory ])   
+
 
     const onToggleActiveGroups = async( activate = true ) => {
         setLoadingToggleGroups(true)
@@ -109,45 +154,68 @@ const GruposPage = () => {
                                         }
                                     </div>
                                 ):(
-                                    <div className="max-w-[600px] mx-auto mt-10">
-                                        <div className="flex justify-between flex-col sm:flex-row gap-4 mb-5">
-                                            <button
-                                                disabled={loadingToggleGroups}
-                                                onClick={ ()=> router.push(`/dashboard/${category.slug}/grupos/secciones`) } 
-                                                className="w-full sm:w-auto font-semibold text-sm rounded-md py-2 px-5 transition-all text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-600 border border-blue-500">
-                                                Secciones
-                                            </button>
-                                            <div className='flex gap-4'>
-                                                <button 
-                                                    disabled={loadingToggleGroups}
-                                                    onClick={()=> onToggleActiveGroups( false )} 
-                                                    className="w-full sm:w-auto font-semibold text-sm rounded-md py-3 px-5 bg-gradient-to-r from-gray-600 to-gray-500 text-white hover:from-gray-600 hover:to-gray-600">
-                                                    Desactivar todos
-                                                </button>
-                                                <button
-                                                    disabled={loadingToggleGroups} 
-                                                    onClick={ ()=> onToggleActiveGroups( true ) } 
-                                                    className="w-full sm:w-auto font-semibold text-sm rounded-md py-3 px-5 bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-600 hover:to-green-600">
-                                                    Activar todos
-                                                </button>
-                                            </div>
+                                    <>
+                                    {/* TODO: */}
+                                        <div className="max-w-[600px] mx-auto mt-10">
+                                            {
+                                                sectionsWithGroups.map( section => (
+                                                    <div key={ section._id } className="flex w-full justify-between items-center bg-white px-3 py-2 rounded border mb-1">
+                                                        <div>
+                                                            <p>{ section.title }</p>
+                                                        </div>
+                                                        <div>
+                                                            <button
+                                                                // onClick={() => setOpenGroups(!openGroups)}
+                                                                // disabled={page.groups!.length === 0}
+                                                                className={`text-2xl p-1 hover:bg-slate-100 rounded`}
+                                                            >
+                                                                <i className={`bx bx-chevron-down transition-all ${ false ? 'rotate-180' : ''}`}></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
                                         </div>
-                                        <section className='max-w-[600px] mx-auto'>
-                                            <ListGroup 
-                                                groups={groupsOfCategory} 
-                                                categoryId={ category._id! } 
-                                            />
-                                            <button
-                                                onClick={()=>setShowForm(true)}
-                                                className="group border-dashed border-2 border-slate-400 py-2 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"
-                                            >
-                                                <div className='rounded-full h-10 w-10 flex justify-center items-center border border-slate-400 group-hover:border-slate-800'>
-                                                    <i className='bx bx-plus text-slate-400 group-hover:text-slate-800 text-xl'></i>
+                                        <div className="max-w-[600px] mx-auto mt-10">
+                                            <div className="flex justify-between flex-col sm:flex-row gap-4 mb-5">
+                                                <button
+                                                    disabled={loadingToggleGroups}
+                                                    onClick={ ()=> router.push(`/dashboard/${category.slug}/grupos/secciones`) } 
+                                                    className="w-full sm:w-auto font-semibold text-sm rounded-md py-2 px-5 transition-all text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-600 border border-blue-500">
+                                                    Secciones
+                                                </button>
+                                                <div className='flex gap-4'>
+                                                    <button 
+                                                        disabled={loadingToggleGroups}
+                                                        onClick={()=> onToggleActiveGroups( false )} 
+                                                        className="w-full sm:w-auto font-semibold text-sm rounded-md py-3 px-5 bg-gradient-to-r from-gray-600 to-gray-500 text-white hover:from-gray-600 hover:to-gray-600">
+                                                        Desactivar todos
+                                                    </button>
+                                                    <button
+                                                        disabled={loadingToggleGroups} 
+                                                        onClick={ ()=> onToggleActiveGroups( true ) } 
+                                                        className="w-full sm:w-auto font-semibold text-sm rounded-md py-3 px-5 bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-600 hover:to-green-600">
+                                                        Activar todos
+                                                    </button>
                                                 </div>
-                                                <p className='text-slate-400 group-hover:text-slate-800 font-semibold'>Agregar grupo</p>
-                                            </button>
-                                        </section>
-                                    </div>
+                                            </div>
+                                            <section className='max-w-[600px] mx-auto'>
+                                                <ListGroup 
+                                                    groups={groupsOfCategory} 
+                                                    categoryId={ category._id! } 
+                                                />
+                                                <button
+                                                    onClick={()=>setShowForm(true)}
+                                                    className="group border-dashed border-2 border-slate-400 py-2 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"
+                                                >
+                                                    <div className='rounded-full h-10 w-10 flex justify-center items-center border border-slate-400 group-hover:border-slate-800'>
+                                                        <i className='bx bx-plus text-slate-400 group-hover:text-slate-800 text-xl'></i>
+                                                    </div>
+                                                    <p className='text-slate-400 group-hover:text-slate-800 font-semibold'>Agregar grupo</p>
+                                                </button>
+                                            </section>
+                                        </div>
+                                    </>
                                 )
                             }
                             {

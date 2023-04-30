@@ -1,3 +1,5 @@
+import { ISection } from "./ISection";
+
 export interface IGroup {
     _id?     : string;
     name     : string;
@@ -5,6 +7,7 @@ export interface IGroup {
     slug?    : string;
     img?     : string;
     category : string;
+    section? : ISection;
 
     active  : boolean
 
