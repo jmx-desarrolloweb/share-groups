@@ -11,7 +11,7 @@ interface Props {
 
 export const ListGroup:FC<Props> = ({ groups, categoryId }) => {
     return (
-        <ul>
+        <ul className="flex flex-col gap-2">
             {
                 groups.map( group => {
                     return (
@@ -19,6 +19,7 @@ export const ListGroup:FC<Props> = ({ groups, categoryId }) => {
                             key={group._id} 
                             group={group}
                             categoryId={ categoryId }
+                            classesName="border"
                         />
                     )
                 })

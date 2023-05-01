@@ -328,7 +328,7 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                 toShow={showDeleteModal} 
                 processing={loadingDelete}
                 title={'Eliminar grupo'} 
-                subtitle={`¿ Desde eliminar la página "${ page.name }" ?`} 
+                subtitle={`¿ Desea eliminar la página "${ page.name }" ?`} 
                 onResult={handleDeletePage}
             />
             {

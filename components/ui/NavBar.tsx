@@ -106,15 +106,15 @@ export const NavBar:FC<Props> = ({ category }) => {
                             <li>
                                 <NextLink 
                                     href={`/dashboard/${query.slug}`} 
-                                    className={`font-semibold text-sky-800 px-3 pb-1 border-b-2 ${`/dashboard/${query.slug}` === asPath ? 'border-blue-500' : 'border-transparent'}`}
+                                    className={`font-semibold text-sky-800 hover:text-sky-600 px-3 pb-1 border-b-2 ${`/dashboard/${query.slug}` === asPath ? 'border-blue-500' : 'border-transparent'}`}
                                 >
                                     Páginas
                                 </NextLink>
                             </li>
-                            <li>
+                            <li className="group">
                                 <NextLink 
                                     href={`/dashboard/${query.slug}/grupos`} 
-                                    className={`font-semibold text-sky-800 px-2 pb-1 border-b-2 ${`/dashboard/${query.slug}/grupos` === asPath ? 'border-blue-500' : 'border-transparent'}`}
+                                    className={`flex items-center font-semibold text-sky-800 hover:text-sky-600 px-2 pb-1 border-b-2 ${(`/dashboard/${query.slug}/grupos` === asPath) || (`/dashboard/${query.slug}/grupos/secciones` === asPath) ? 'border-blue-500' : 'border-transparent'}`}
                                 >
                                     Grupos
                                 </NextLink>

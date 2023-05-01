@@ -32,10 +32,23 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const toggleActiveGroups = async( req: NextApiRequest, res: NextApiResponse<Data> ) => {
     
-    const { idCategory = '', activate = true } = req.body
+    const { idCategory = '', activate = true, idSection=null, activeSection = true } = req.body
 
     if( !isValidObjectId(idCategory) ){
         return res.status(400).json({ message: 'El ID de la categoría NO es válido' })
+    }
+    
+    let activateGroups = idSection ? activeSection : activate
+
+    let condition = {}
+    
+    if( idSection ){
+        
+        if( !isValidObjectId(idSection) ){
+            return res.status(400).json({ message: 'El ID de la sección NO es válido' })
+        }
+        
+        condition = { section: idSection }
     }
 
     try {
@@ -55,7 +68,7 @@ const toggleActiveGroups = async( req: NextApiRequest, res: NextApiResponse<Data
             return res.status(401).json({ message: 'Not authorized' }) 
         }
                 
-        await Group.updateMany({ category: idCategory }, { active: activate })
+        await Group.updateMany({ category: idCategory, ...condition }, { active: activateGroups })
         
         return res.status(200).json({ message: 'OK' })
 

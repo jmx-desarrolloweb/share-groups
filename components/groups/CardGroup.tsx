@@ -11,9 +11,10 @@ import { ModalFormGroup } from './ModalFormGroup';
 interface Props {
     group: IGroup
     categoryId: string
+    classesName: string
 }
 
-export const CardGroup:FC<Props> = ({ group, categoryId }) => {
+export const CardGroup:FC<Props> = ({ group, categoryId, classesName = '' }) => {
 
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -80,7 +81,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
 
     return (
         <>
-            <li className="flex w-full justify-between items-center bg-white px-3 py-2 rounded border mb-2">
+            <li className={`flex w-full justify-between items-center bg-white px-3 py-2 rounded ${ classesName }`}>
                 <div className="flex items-center gap-4">
                     <div className="relative w-[50px] h-[50px]">
                         {group.img
@@ -146,7 +147,7 @@ export const CardGroup:FC<Props> = ({ group, categoryId }) => {
                 toShow={showDeleteModal} 
                 processing={loadingDelete}
                 title={'Eliminar grupo'} 
-                subtitle={`¿ Desde eliminar el grupo "${ group.name }" ?`} 
+                subtitle={`¿ Desea eliminar el grupo "${ group.name }" ?`} 
                 onResult={onDelete}
             />
             {

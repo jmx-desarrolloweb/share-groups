@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useRef, useState, useMemo, ChangeEvent } from 'react';
 import Image from "next/image";
 
 import { toast } from 'react-toastify'
@@ -8,7 +8,7 @@ import { IPage } from '../../interfaces/IPage';
 
 import profilePic from '../../public/img/facebook-page.jpg'
 import axios from 'axios';
-import { IGroup } from "../../interfaces";
+import { IGroup, ISection } from "../../interfaces";
 import { useData } from "../../hooks/useData";
 import { Checkbox } from "../ui";
 
@@ -33,7 +33,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
 
     const [loading, setLoading] = useState(false)
 
-    const { addNewGroup, updateGroup } = useData()
+    const { addNewGroup, updateGroup, sections } = useData()
 
     const fileInputRef = useRef<any>(null)
 
@@ -41,6 +41,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
         defaultValues: {
             name:'',
             url: '',
+            section: '',
             active: true
         }
     })
@@ -50,13 +51,18 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             reset({
                 name: groupEdit.name,
                 url: groupEdit.url,
+                section: groupEdit.section ?  groupEdit.section : '',
                 active: groupEdit.active,
             })
             setImageEdit(groupEdit.img)
         }
     },[groupEdit])
     
-    
+
+    const sectionsByCategory = useMemo(()=> {
+        return sections.filter( section => section.category?._id === categoryId )
+
+    },[sections])
 
 
     const handleFileChange = (e:any) => {
@@ -100,8 +106,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             }
         }
     }, [file])
-
-    
+  
 
     const deleteImage = async() => {
         setFile(null)
@@ -125,6 +130,11 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
         }
     }
 
+    const onChangeSection = async( { target }:ChangeEvent<HTMLSelectElement> ) => {
+
+        setValue('section', target.value as string, { shouldValidate: true } )
+    }
+
     const toggleGroupActive = () => {
         setValue('active', !getValues('active') ,{ shouldValidate: true })
     }
@@ -133,7 +143,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
         setShowForm(false)
     }
 
-    const onPageSubmit = async({ name, url, active }:IGroup) => {
+    const onPageSubmit = async({ name, url, section, active }:IGroup) => {
         setLoading(true)
         
         const newGroup:IGroup = {
@@ -141,6 +151,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
             url: url.trim(),
             category: categoryId,
             img: imageEdit,
+            section,
             active
         }
 
@@ -228,6 +239,29 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                     !!errors.name &&
                                     <p className="text-sm text-red-600 ml-1">{errors.name.message}</p>
                                 }
+                            </div>
+                            <div className="flex flex-col gap-1 mb-4 w-full">
+                                <label htmlFor="section" className="font-semibold">Sección</label>
+                                <select 
+                                    name="section" 
+                                    id="section"
+                                    value={getValues('section')!}
+                                    onChange={onChangeSection}
+                                    className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.section ? 'outline-red-500 border-red-500' :'' }`}
+                                >
+                                    <option value="">Sin sección</option>
+                                    {
+                                        sectionsByCategory.map( section => (
+                                            <option 
+                                                key={section._id} 
+                                                value={ section._id }
+                                            >
+                                                { section.title }
+                                            </option>
+                                        ))
+                                    }
+                                    
+                                </select>
                             </div>
                             <div className="flex flex-col gap-1 mb-4 w-full">
                                 <label htmlFor="url" className="font-semibold">URL</label>

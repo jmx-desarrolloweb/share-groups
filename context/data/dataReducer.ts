@@ -1,7 +1,7 @@
 
 
 import { DataState } from './';
-import { ICategory, IGroup, IPage } from '../../interfaces';
+import { ICategory, IGroup, IPage, ISection } from '../../interfaces';
 
 
 type DataActionType =
@@ -20,12 +20,19 @@ type DataActionType =
     | { type: '[Data] - Update Group', payload: IGroup }
     | { type: '[Data] - Delete Group', payload: string }
 
+    | { type: '[Data] - Load Sections', payload: ISection[] }
+    | { type: '[Data] - Add New Section', payload: ISection }
+    | { type: '[Data] - Update Section', payload: ISection }
+    | { type: '[Data] - Delete Section', payload: string }
+
     | { type: '[Data] - Reset Groups Of Pages', payload: IPage[] }
 
     | { type: '[Data] - Toggle Active Groups', payload: { idCategory:string, activate: boolean }  }
 
+    | { type: '[Data] - Toggle Active Groups of Section', payload: { idCategory:string, idSection:string, activeSection: boolean }  }
 
-export const dataReducer = (state: DataState, action: DataActionType): DataState => {
+
+export const dataReducer = (state: DataState, action: DataActionType): DataState => {    
 
     switch (action.type) {
         
@@ -102,6 +109,32 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
                 groups: state.groups.filter( group => group._id !== action.payload )
             }
 
+        // Sections
+        case '[Data] - Load Sections':
+            return {
+                ...state,
+                sections: [ ...state.sections, ...action.payload ]
+            }
+
+        case '[Data] - Add New Section':
+            return {
+                ...state,
+                sections: [...state.sections, action.payload]
+            }
+
+        case '[Data] - Update Section':
+            return {
+                ...state,
+                sections: state.sections.map( section => section._id === action.payload._id ? action.payload : section )
+            }
+
+        case '[Data] - Delete Section':
+            return {
+                ...state,
+                groups: state.groups.map( group => group.section === action.payload ? ({ ...group, section: undefined }) : group ),
+                sections: state.sections.filter( section => section._id !== action.payload)
+            }
+
         // Reset groups
         case '[Data] - Reset Groups Of Pages':
             return {
@@ -113,6 +146,16 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 groups: state.groups.map( group => group.category === action.payload.idCategory ? ({ ...group, active: action.payload.activate }) : group )
+            }
+
+        case '[Data] - Toggle Active Groups of Section':
+            return {
+                ...state,
+                groups: state.groups.map( group => {
+                    return group.category === action.payload.idCategory && group.section === action.payload.idSection
+                        ? ({ ...group, active: action.payload.activeSection }) 
+                        : group
+                })
             }
 
         default:
