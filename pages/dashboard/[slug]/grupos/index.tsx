@@ -5,7 +5,7 @@ import { useData } from '../../../../hooks/useData'
 import { LayoutApp, LayoutCategory } from '../../../../components/layouts'
 
 import { ICategory, IGroup, ISection } from '../../../../interfaces'
-import { ListGroup, ModalFormGroup } from '../../../../components/groups'
+import { CardGroup, ListGroup, ListSectionsWithGroups, ModalFormGroup } from '../../../../components/groups'
 
 const GruposPage = () => {
 
@@ -44,7 +44,6 @@ const GruposPage = () => {
     },[query, categories])
 
 
-        // TODO: CArgar categorias con los grupos a la vez
     const loadSections = async() => {
 
         if(!category?._id){ return }
@@ -109,7 +108,7 @@ const GruposPage = () => {
         return sectionsOfCategory.map( section => {
             const newSection = {
                 ...section,
-                groups: groupsOfCategory.filter( group => group.section?._id === section._id )
+                groups: groupsOfCategory.filter( group => group.section === section._id )
             }            
             return newSection
         })
@@ -155,27 +154,6 @@ const GruposPage = () => {
                                     </div>
                                 ):(
                                     <>
-                                    {/* TODO: */}
-                                        <div className="max-w-[600px] mx-auto mt-10">
-                                            {
-                                                sectionsWithGroups.map( section => (
-                                                    <div key={ section._id } className="flex w-full justify-between items-center bg-white px-3 py-2 rounded border mb-1">
-                                                        <div>
-                                                            <p>{ section.title }</p>
-                                                        </div>
-                                                        <div>
-                                                            <button
-                                                                // onClick={() => setOpenGroups(!openGroups)}
-                                                                // disabled={page.groups!.length === 0}
-                                                                className={`text-2xl p-1 hover:bg-slate-100 rounded`}
-                                                            >
-                                                                <i className={`bx bx-chevron-down transition-all ${ false ? 'rotate-180' : ''}`}></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
                                         <div className="max-w-[600px] mx-auto mt-10">
                                             <div className="flex justify-between flex-col sm:flex-row gap-4 mb-5">
                                                 <button
@@ -200,13 +178,24 @@ const GruposPage = () => {
                                                 </div>
                                             </div>
                                             <section className='max-w-[600px] mx-auto'>
-                                                <ListGroup 
-                                                    groups={groupsOfCategory} 
-                                                    categoryId={ category._id! } 
-                                                />
+                                                <div className="mb-10">
+                                                    <ListSectionsWithGroups sections={sectionsWithGroups} categoryId={category._id!} />
+                                                </div>
+                                                {
+                                                    groupsOfCategory.filter( g => !g.section ).length > 0
+                                                    && (
+                                                        <>
+                                                            <h2 className="font-bold text-xl mb-5">Grupos sin asignar</h2>
+                                                            <ListGroup 
+                                                                groups={groupsOfCategory.filter( g => !g.section )} 
+                                                                categoryId={ category._id! } 
+                                                            />
+                                                        </>
+                                                    )
+                                                }
                                                 <button
                                                     onClick={()=>setShowForm(true)}
-                                                    className="group border-dashed border-2 border-slate-400 py-2 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer"
+                                                    className="group border-dashed border-2 border-slate-400 py-2 w-full flex justify-center items-center gap-4 mb-5 rounded hover:border-slate-800 hover:cursor-pointer mt-2"
                                                 >
                                                     <div className='rounded-full h-10 w-10 flex justify-center items-center border border-slate-400 group-hover:border-slate-800'>
                                                         <i className='bx bx-plus text-slate-400 group-hover:text-slate-800 text-xl'></i>

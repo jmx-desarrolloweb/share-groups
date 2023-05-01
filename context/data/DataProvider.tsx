@@ -434,6 +434,8 @@ export const DataProvider: FC<Props> = ({ children }) => {
             
             const { data } = await axios.put('/api/dashboard/groups', group)
 
+            console.log({ data });
+            
             dispatch({ type: '[Data] - Update Group', payload: data })
             notifySuccess('Grupo actualizado')
 

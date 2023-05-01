@@ -7,7 +7,7 @@ export interface IGroup {
     slug?    : string;
     img?     : string;
     category : string;
-    section? : ISection;
+    section? : string;
 
     active  : boolean
 
