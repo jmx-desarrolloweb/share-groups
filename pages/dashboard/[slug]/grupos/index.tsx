@@ -23,6 +23,10 @@ const GruposPage = () => {
     
     const { categories, updating, groups, refreshGroups, toggleActiveGroups, /*  */ sections, refreshSections } =  useData()
 
+    const groupsWithoutSection = useMemo(()=> groupsOfCategory.filter( g => !g.section ) ,[groupsOfCategory])
+
+
+
     useEffect(()=> {
 
         if(categories.length === 0 || !query.slug){ return }
@@ -155,7 +159,7 @@ const GruposPage = () => {
                                 ):(
                                     <>
                                         <div className="max-w-[600px] mx-auto mt-10">
-                                            <div className="flex justify-between flex-col sm:flex-row gap-4 mb-5">
+                                            <div className="flex justify-between flex-col sm:flex-row gap-4 mb-8">
                                                 <button
                                                     disabled={loadingToggleGroups}
                                                     onClick={ ()=> router.push(`/dashboard/${category.slug}/grupos/secciones`) } 
@@ -182,12 +186,15 @@ const GruposPage = () => {
                                                     <ListSectionsWithGroups sections={sectionsWithGroups} categoryId={category._id!} />
                                                 </div>
                                                 {
-                                                    groupsOfCategory.filter( g => !g.section ).length > 0
+                                                    groupsWithoutSection.length > 0
                                                     && (
                                                         <>
-                                                            <h2 className="font-bold text-xl mb-5">Grupos sin asignar</h2>
+                                                            {
+                                                                sectionsOfCategory.length > 0 &&
+                                                                <h2 className="font-bold text-xl mb-5">Sin asignar ({ groupsWithoutSection.length })</h2>
+                                                            }
                                                             <ListGroup 
-                                                                groups={groupsOfCategory.filter( g => !g.section )} 
+                                                                groups={ groupsWithoutSection } 
                                                                 categoryId={ category._id! } 
                                                             />
                                                         </>

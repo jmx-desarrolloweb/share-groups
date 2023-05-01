@@ -29,6 +29,8 @@ type DataActionType =
 
     | { type: '[Data] - Toggle Active Groups', payload: { idCategory:string, activate: boolean }  }
 
+    | { type: '[Data] - Toggle Active Groups of Section', payload: { idCategory:string, idSection:string, activeSection: boolean }  }
+
 
 export const dataReducer = (state: DataState, action: DataActionType): DataState => {    
 
@@ -129,6 +131,7 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
         case '[Data] - Delete Section':
             return {
                 ...state,
+                groups: state.groups.map( group => group.section === action.payload ? ({ ...group, section: undefined }) : group ),
                 sections: state.sections.filter( section => section._id !== action.payload)
             }
 
@@ -143,6 +146,16 @@ export const dataReducer = (state: DataState, action: DataActionType): DataState
             return {
                 ...state,
                 groups: state.groups.map( group => group.category === action.payload.idCategory ? ({ ...group, active: action.payload.activate }) : group )
+            }
+
+        case '[Data] - Toggle Active Groups of Section':
+            return {
+                ...state,
+                groups: state.groups.map( group => {
+                    return group.category === action.payload.idCategory && group.section === action.payload.idSection
+                        ? ({ ...group, active: action.payload.activeSection }) 
+                        : group
+                })
             }
 
         default:

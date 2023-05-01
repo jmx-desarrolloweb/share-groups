@@ -37,7 +37,7 @@ interface ContextProps {
         pagesResp: IPage[];
     }>
 
-    toggleActiveGroups: (idCategory: string, activate?: boolean) => Promise<{
+    toggleActiveGroups: (idCategory: string, activate?: boolean, idSection?: string, activeSection?: boolean) => Promise<{
         hasError: boolean;
     }>
 }

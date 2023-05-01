@@ -433,8 +433,6 @@ export const DataProvider: FC<Props> = ({ children }) => {
         try {
             
             const { data } = await axios.put('/api/dashboard/groups', group)
-
-            console.log({ data });
             
             dispatch({ type: '[Data] - Update Group', payload: data })
             notifySuccess('Grupo actualizado')
@@ -707,16 +705,24 @@ export const DataProvider: FC<Props> = ({ children }) => {
         }
     }
 
-    const toggleActiveGroups = async( idCategory:string, activate = true ):Promise<{ hasError:boolean }> => {
+    const toggleActiveGroups = async( idCategory:string, activate = true, idSection?: string, activeSection?: boolean ):Promise<{ hasError:boolean }> => {
+        
         try {
-            await axios.post('/api/dashboard/toggle-active-groups', { idCategory, activate })
-            dispatch({ type: '[Data] - Toggle Active Groups', payload: { idCategory, activate } })
+            await axios.post('/api/dashboard/toggle-active-groups', { idCategory, activate, idSection, activeSection })
+
+            if( idSection ){
+                dispatch({ type: '[Data] - Toggle Active Groups of Section', payload: { idCategory, idSection, activeSection: !!activeSection } })
+            }else {
+                dispatch({ type: '[Data] - Toggle Active Groups', payload: { idCategory, activate } })
+            }
+
 
             if( activate ){
                 notifySuccess('Grupos activados')
             }else {
                 notifySuccess('Grupos desactivados')
             }
+
 
             return {
                 hasError: false

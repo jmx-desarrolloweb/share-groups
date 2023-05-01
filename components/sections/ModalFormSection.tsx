@@ -33,11 +33,6 @@ export const ModalFormSection: FC<Props> = ({ sectionEdit, category, setShowForm
         }
     },[sectionEdit])
     
-
-    const toggleSectionActive = () => {
-        setValue('active', !getValues('active') ,{ shouldValidate: true })
-    }
-
     const onCancel = async () => {
         setShowForm(false)
     }
@@ -97,14 +92,6 @@ export const ModalFormSection: FC<Props> = ({ sectionEdit, category, setShowForm
                                         !!errors.title &&
                                         <p className="text-sm text-red-600 ml-1">{errors.title.message}</p>
                                     }
-                                </div>
-                                <div className="flex flex-col gap-1 w-full">
-                                    <Checkbox 
-                                        value={ getValues('active')! } 
-                                        onCheckChange={toggleSectionActive} 
-                                        label={'Activo'}
-                                        disabled={loading}
-                                    />
                                 </div>
                             </div>
                             <div className="bg-gray-50 px-4 py-4 sm:flex sm:flex-row-reverse sm:px-6">

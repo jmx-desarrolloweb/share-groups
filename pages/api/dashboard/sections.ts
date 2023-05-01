@@ -4,7 +4,7 @@ import { isValidObjectId } from 'mongoose'
 import * as jose from 'jose'
 
 import { db } from '../../../database'
-import { Category, Section } from '../../../models'
+import { Category, Group, Section } from '../../../models'
 import { ISection } from '../../../interfaces'
 
 
@@ -222,6 +222,8 @@ const deleteSection = async(req: NextApiRequest, res: NextApiResponse<Data>) => 
             await db.disconnect()
             return res.status(401).json({ message: 'Not authorized' }) 
         }
+
+        await Group.updateMany({ section: _id }, { $unset: { section: "" } })
 
         await section.deleteOne()
         await db.disconnect()

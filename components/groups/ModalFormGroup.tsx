@@ -249,7 +249,7 @@ export const ModalFormGroup: FC<Props> = ({ groupEdit, categoryId, setShowForm }
                                     onChange={onChangeSection}
                                     className={`bg-admin rounded-md flex-1 border p-3 hover:border-slate-800 disabled:border-slate-200 ${ !!errors.section ? 'outline-red-500 border-red-500' :'' }`}
                                 >
-                                    <option value="">Seleccionar sección</option>
+                                    <option value="">Sin sección</option>
                                     {
                                         sectionsByCategory.map( section => (
                                             <option 
