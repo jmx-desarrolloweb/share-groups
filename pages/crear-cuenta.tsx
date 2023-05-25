@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import NextLink from 'next/link'
@@ -10,22 +10,32 @@ import { useAuth } from '../hooks/useAuth';
 import { IUser } from '../interfaces';
 import { useData } from '../hooks/useData';
 
-const IniciarSesionPage = () => {
+export interface IUserRegister{
+    _id?          : string
+    name          : string
+    email         : string
+    password      : string
+    repitePassword: string
+}
+
+const CrearCuentaPage = () => {
 
     const [loading, setLoading] = useState(false)
     const [msgError, setMsgError] = useState<string | undefined>()
     const router = useRouter()
 
-    const { register, handleSubmit, formState:{ errors } } = useForm<IUser>()    
-    const { loginUser } = useAuth()
-    const { refreshCategories } =useData()
+    const { register, handleSubmit, formState:{ errors }, watch } = useForm<IUserRegister>()    
+    const { registerUser } = useAuth()
+
+    const password = useRef({})
+    password.current = watch("password", "")
 
 
     const onLoginSubmit = async( data:IUser ) => {
 
         setLoading(true)
 
-        const { hasError, message } = await loginUser( data.email, data.password )
+        const { hasError, message } = await registerUser(data.name, data.email, data.password )
 
         if(hasError){
             setLoading(false)
@@ -36,14 +46,7 @@ const IniciarSesionPage = () => {
             return
         }
         
-        const { categoriesResp } = await refreshCategories()
-        
-        if( categoriesResp.length === 0 ){
-            router.replace('/dashboard')
-        }else {
-            router.replace(`/dashboard/${categoriesResp[0].slug}`)
-        }
-
+        router.replace('/dashboard')
     }
 
     return (
@@ -62,21 +65,37 @@ const IniciarSesionPage = () => {
                 <div className="relative flex justify-center items-center w-full h-full">
                     <form 
                         onSubmit={ handleSubmit( onLoginSubmit ) }
-                        className="relative flex flex-col justify-center sm:py-14 sm:w-1/2 max-w-[500px] h-full sm:h-auto px-10 bg-white/20 sm:bg-white/50 border-2 border-white/70 sm:rounded-2xl shadow-md backdrop-blur-md"
+                        className="relative flex flex-col justify-center sm:py-14 sm:w-1/2 w-full max-w-[500px] h-full sm:h-auto px-10 bg-white/20 sm:bg-white/50 border-2 border-white/70 sm:rounded-2xl shadow-md backdrop-blur-md"
                     >
-                        <header className="mb-7">
-                            <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Share</span> Groups</h1>
-                            <p className="text-slate-700 sm:text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p>
+                        <header className="mb-4">
+                            <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Crear</span> Cuenta</h1>
+                            {/* <p className="text-slate-700 sm:text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p> */}
                         </header>
-                        <div className="flex flex-col mb-5">
-                            <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Usuario</label>
+                        <div className="flex flex-col mb-3">
+                            <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Nombre</label>
                             <input 
                                 type="text"
                                 placeholder="Ingrese su usuario"
                                 id="user"
                                 className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
+                                {...register('name', {
+                                    required: 'Ingrese su nombre'
+                                })}
+                            />
+                            {
+                                !!errors.name &&
+                                <p className="text-sm text-red-600 ml-1">{ errors.name.message }</p>
+                            }
+                        </div>
+                        <div className="flex flex-col mb-3">
+                            <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Correo</label>
+                            <input 
+                                type="email"
+                                placeholder="Ingrese su usuario"
+                                id="user"
+                                className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
                                 {...register('email', {
-                                    required: 'Ingrese su usuario'
+                                    required: 'Ingrese su correo'
                                 })}
                             />
                             {
@@ -84,7 +103,7 @@ const IniciarSesionPage = () => {
                                 <p className="text-sm text-red-600 ml-1">{ errors.email.message }</p>
                             }
                         </div>
-                        <div className="flex flex-col mb-10">
+                        <div className="flex flex-col mb-3">
                             <label htmlFor="password" className="font-bold ml-1 text-slate-800 mb-1">Contraseña</label>
                             <input 
                                 type="password"
@@ -92,12 +111,31 @@ const IniciarSesionPage = () => {
                                 id="password"
                                 className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
                                 {...register('password', {
-                                    required: 'Ingrese su contraseña'
+                                    required: 'Ingrese su contraseña',
+                                    minLength: { value: 6, message: 'Se requieren minimo 6 caracteres' },
                                 })}
                             />
                             {
                                 !!errors.password &&
                                 <p className="text-sm text-red-600 ml-1">{ errors.password.message }</p>
+                            }
+                        </div>
+                        <div className="flex flex-col mb-10">
+                            <label htmlFor="password" className="font-bold ml-1 text-slate-800 mb-1">Confirma contraseña:</label>
+                            <input 
+                                type="password"
+                                placeholder="Repite la contraseña"
+                                id="repitePassword"
+                                className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
+                                {...register('repitePassword', {
+                                    required: 'Repite la contraseña',
+                                    minLength: { value: 6, message: 'Se requieren minimo 6 caracteres' },
+                                    validate: value => value === password.current || "Las contraseñas no coinsiden"
+                                })}
+                            />
+                            {
+                                !!errors.repitePassword &&
+                                <p className="text-sm text-red-600 ml-1">{ errors.repitePassword.message }</p>
                             }
                         </div>
                         <button
@@ -124,10 +162,10 @@ const IniciarSesionPage = () => {
                                         </path>
                                     </svg>
                                 )
-                                : 'Iniciar Sesión'
+                                : 'Crear Cuenta'
                             }
                         </button>
-                        <p className="text-slate-700 text-center mt-2">¿Aun no tienes una cuenta? <NextLink href="/crear-cuenta" className="text-blue-600">Registrate</NextLink></p>
+                        <p className="text-slate-700 text-center mt-2">¿Ya tienes una cuenta? <NextLink href="/" className="text-blue-600">Inicia Sesión</NextLink></p>
 
                         {
                             msgError &&
@@ -147,4 +185,4 @@ const IniciarSesionPage = () => {
     )
 }
 
-export default IniciarSesionPage
+export default CrearCuentaPage
