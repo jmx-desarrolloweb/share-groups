@@ -88,7 +88,6 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     const registerUser = async( name:string, email:string, password:string ):Promise<{ hasError: boolean, message?: string }> => {
 
         try {
-            // TODO: implementa endpoint
             const { data } = await axios.post('/api/auth/register', { name, email, password })
             const { token, user } = data
 
