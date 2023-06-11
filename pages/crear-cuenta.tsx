@@ -69,7 +69,6 @@ const CrearCuentaPage = () => {
                     >
                         <header className="mb-4">
                             <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3"><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Crear</span> Cuenta</h1>
-                            {/* <p className="text-slate-700 sm:text-slate-500 font-medium">Administra tus páginas y realiza publicaciones de forma aleatoria a grupos de Facebook.</p> */}
                         </header>
                         <div className="flex flex-col mb-3">
                             <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Nombre</label>
@@ -91,7 +90,7 @@ const CrearCuentaPage = () => {
                             <label htmlFor="user" className="font-bold ml-1 text-slate-800 mb-1">Correo</label>
                             <input 
                                 type="email"
-                                placeholder="Ingrese su usuario"
+                                placeholder="Ingrese su correo"
                                 id="user"
                                 className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
                                 {...register('email', {
@@ -124,7 +123,7 @@ const CrearCuentaPage = () => {
                             <label htmlFor="password" className="font-bold ml-1 text-slate-800 mb-1">Confirma contraseña:</label>
                             <input 
                                 type="password"
-                                placeholder="Repite la contraseña"
+                                placeholder="Repita su contraseña"
                                 id="repitePassword"
                                 className="bg-admin rounded-md flex-1 border p-3 hover:border-slate-800"
                                 {...register('repitePassword', {
