@@ -1,11 +1,12 @@
-import { FC, useState } from "react"
+import { FC, useCallback, useState } from "react"
 import NextImage from 'next/image'
-
-import { ModalDelete, ModalListGroup } from "../ui";
-import { useData } from '../../hooks/useData';
-import { ModalFormPage } from "./ModalFormPage";
+import { toast } from "react-toastify"
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { ModalDelete, ModalListGroup } from "../ui"
+import { useData } from '../../hooks/useData'
+import { ModalFormPage } from "./ModalFormPage"
+import { ModalRemoveGroup } from "./ModalRemoveGroup"
 import { IGroup, IPage } from "../../interfaces"
-import { ModalRemoveGroup } from "./ModalRemoveGroup";
 
 interface Props {
     page: IPage
@@ -146,6 +147,30 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
         
     }
 
+    const handleCopyUrlGroup = useCallback(() => {
+        toast.dark('URL de grupo copiado', {
+            theme: "dark",
+            hideProgressBar: true,
+            autoClose: 1000
+        })
+    }, [])
+
+    const getGroupsUrls = (page:IPage) => {
+        let urlsText = ``
+        page.groups?.forEach(group => {
+            urlsText += `${ group.url } \n`
+        })
+
+        return urlsText
+    }
+
+    const handleCopyAllUrlsOfPage = useCallback(() => {
+        toast.dark(`URLs de la página copiados`, {
+            theme: "dark",
+            hideProgressBar: true,
+            autoClose: 1000
+        })
+    }, [])
 
     const handleDeletePage = async( method: () => Promise<{ confirm: boolean }> ) => {
         
@@ -237,6 +262,12 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                         className="hover:text-gray-900 hover:bg-slate-100 rounded active:scale-95 p-2">
                         <i className='bx bx-link-external text-slate-600'></i>
                     </button>
+                    <CopyToClipboard onCopy={ handleCopyAllUrlsOfPage } text={ getGroupsUrls( page ) }>
+                        <button
+                            className="hover:text-gray-900 hover:bg-slate-100 rounded active:scale-95 p-2">
+                            <i className='bx bx-copy-alt text-slate-600 hover:text-slate-800'></i>
+                        </button>
+                    </CopyToClipboard>
                 </div>
             </header>
             <div>
@@ -246,7 +277,11 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                         {
                             page.groups!.map(group => {
                                     return (
-                                        <div key={group._id} className={`pl-10 pr-10 my-1 py-4 justify-between items-center even:bg-gray-100 ${openGroups ? 'opacity-100 flex' : 'opacity-0 hidden'}`}>
+
+                                        <div
+                                            key={group._id}  
+                                            className={`pl-10 pr-10 my-1 py-4 flex justify-between items-center group even:bg-gray-100 ${openGroups ? 'opacity-100 block' : 'opacity-0 hidden'}`}
+                                        >
                                             <div className="flex items-center gap-2">
                                                 <div className="relative w-[40px] h-[40px]">
                                                     {group.img
@@ -296,6 +331,14 @@ export const CardPage: FC<Props> = ({ page, categoryId }) => {
                                                 >
                                                     <i className='bx bx-link-alt text-xl'></i>
                                                 </a>
+                                                <CopyToClipboard onCopy={handleCopyUrlGroup} text={group.url}>
+
+                                                    <button
+                                                        className='text-sky-700 hover:text-sky-800 active:bg-slate-100 active:group-even:bg-white rounded-md px-2 py-1'
+                                                    >
+                                                        <i className='bx bx-clipboard' ></i>
+                                                    </button>
+                                                </CopyToClipboard>
                                             </div>
                                         </div>
                                     )
